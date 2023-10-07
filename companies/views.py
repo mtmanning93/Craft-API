@@ -39,6 +39,24 @@ class CompanyList(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+        company_title = request.data.get('name')
+        company_location = request.data.get('location')
+
+        existing_company = Company.objects.filter(
+            name=company_title,
+            location=company_location
+        ).first()
+
+        if existing_company:
+            return Response(
+                {
+                    "message": (
+                        f"A company with the title '{company_title}' and location '{company_location}' already exists."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         serializer = CompanySerializer(
             data=request.data, context={'request': request}
         )
