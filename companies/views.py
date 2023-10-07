@@ -9,6 +9,10 @@ from craft_api.permissions import IsOwnerOrReadOnly
 
 
 class CompanyList(APIView):
+    """
+    Lists all companies.
+    Allows a single user to create a maximum of 3 companies.
+    """
     serializer_class = CompanySerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly
@@ -49,6 +53,11 @@ class CompanyList(APIView):
 
 
 class CompanyDetail(APIView):
+    """
+    Lists all company details.
+    Allows the company instance owner to edit the details, as well
+    as delete the company instance.
+    """
     serializer_class = CompanySerializer
     permission_classes = [IsOwnerOrReadOnly]
 

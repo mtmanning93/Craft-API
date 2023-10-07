@@ -3,6 +3,12 @@ from django.contrib.auth.models import User
 
 
 class Post(models.Model):
+    """
+    Post model, related to 'owner' via the User FK.
+    Image default set to the site logo, if no image added.
+    Ordering set to '-created_on' so the newest post
+    is shown first.
+    """
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField(blank=True)

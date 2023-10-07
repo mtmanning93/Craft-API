@@ -3,6 +3,10 @@ from .models import Company
 
 
 class CompanySerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Company model.
+    'is_owner' checks if the request user owns the profile.
+    """
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
 

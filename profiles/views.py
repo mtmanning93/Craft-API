@@ -9,6 +9,11 @@ from craft_api.permissions import IsOwnerOrReadOnly
 
 
 class ProfileList(APIView):
+    """
+    List all profiles
+    No post method as profile creation is handled by django signals
+    in the models.py create_profile method.
+    """
     def get(self, request):
         profiles = Profile.objects.all()
         serializer = ProfileSerializer(
@@ -18,6 +23,10 @@ class ProfileList(APIView):
 
 
 class ProfileDetail(APIView):
+    """
+    Allows the retrieval of a profile and the ability to
+    edit it if the user is the owner.
+    """
     serializer_class = ProfileSerializer
     permission_classes = [IsOwnerOrReadOnly]
 

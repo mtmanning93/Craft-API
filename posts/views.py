@@ -10,6 +10,10 @@ from craft_api.permissions import IsOwnerOrReadOnly
 
 
 class PostList(APIView):
+    """
+    List all posts.
+    Allows for the post creation within the 'post' method
+    """
     serializer_class = PostSerializer
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly
@@ -31,13 +35,17 @@ class PostList(APIView):
             return Response(
                 serializer.data, status=status.HTTP_201_CREATED
             )
-
         return Response(
             serializer.errors, status=status.HTTP_400_BAD_REQUEST
         )
 
 
 class PostDetail(APIView):
+    """
+    List all post details.
+    Allows editing of a post if user is the owner, as well as
+    deletions.
+    """
     serializer_class = PostSerializer
     permission_classes = [IsOwnerOrReadOnly]
 

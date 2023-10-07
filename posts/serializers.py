@@ -3,6 +3,11 @@ from .models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Post model.
+    'is_owner' checks if the request user owns the profile.
+    Also validates image size and dimensions.
+    """
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     profile_id = serializers.ReadOnlyField(source='owner.profile.id')

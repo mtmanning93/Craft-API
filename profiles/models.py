@@ -4,6 +4,12 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
+    """
+    Profile model, related to 'owner' via the User FK.
+    Image set to a default user icon, for new users.
+    Ordering set to 'name' to enable easy searching
+    when in list view.
+    """
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
@@ -22,6 +28,9 @@ class Profile(models.Model):
 
 
 def create_profile(sender, instance, created, **kwargs):
+    """
+    Creates the profile instance when a user is created.
+    """
     if created:
         Profile.objects.create(owner=instance)
 
