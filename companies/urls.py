@@ -2,6 +2,6 @@ from django.urls import path
 from companies import views
 
 urlpatterns = [
-    path('list/', views.CompanyList.as_view()),
-    path('details/<int:pk>/', views.CompanyDetail.as_view()),
+    path('companies/', views.CompanyList.as_view()),
+    path('companies/<int:pk>/', views.CompanyDetail.as_view()),
 ]
