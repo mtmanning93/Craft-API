@@ -4,9 +4,15 @@ from .models import Company
 
 class CompanySerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    is_owner = serializers.SerializerMethodField()
+
+    def get_is_owner(self, obj):
+        request = self.context['request']
+        return request.user == obj.owner
 
     class Meta:
         model = Company
         fields = [
-            'id', 'owner', 'location', 'created_on'
+            'id', 'name', 'owner', 'location', 'created_on',
+            'is_owner',
         ]
