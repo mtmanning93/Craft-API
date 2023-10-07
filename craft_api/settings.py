@@ -37,7 +37,7 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['8000-mtmanning93-craftapi-uuv7499fr3p.ws-eu105.gitpod.io']
 
 
 # Application definition
