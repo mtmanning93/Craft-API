@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from django.http import Http404
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 
 from .models import Company
@@ -9,12 +9,43 @@ from craft_api.permissions import IsOwnerOrReadOnly
 
 
 class CompanyList(APIView):
+    serializer_class = CompanySerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly
+    ]
+
     def get(self, request):
         companies = Company.objects.all()
         serializer = CompanySerializer(
             companies, many=True, context={'request': request}
         )
         return Response(serializer.data)
+
+    def post(self, request):
+        companies_count = Company.objects.filter(owner=request.user).count()
+
+        if companies_count >= 3:
+            return Response(
+                {
+                    "message": (
+                        "You have reached the max profile "
+                        "limit of 3 companies."
+                    )
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = CompanySerializer(
+            data=request.data, context={'request': request}
+        )
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 class CompanyDetail(APIView):
