@@ -51,7 +51,8 @@ class CompanyList(APIView):
             return Response(
                 {
                     "message": (
-                        f"A company with the title '{company_title}' and location '{company_location}' already exists."
+                        f"A company with the title '{company_title}'"
+                        f" and location '{company_location}' already exists."
                     )
                 },
                 status=status.HTTP_400_BAD_REQUEST
