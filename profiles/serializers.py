@@ -9,5 +9,5 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = [
             'id', 'owner', 'name', 'bio', 'job',
-            'creataed_on', 'updated_on', 'image'
+            'created_on', 'updated_on', 'image'
         ]
