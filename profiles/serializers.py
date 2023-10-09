@@ -14,6 +14,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     is_owner = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
     approval_id = serializers.SerializerMethodField()
+    posts_count = serializers.ReadOnlyField()
+    followers_count = serializers.ReadOnlyField()
+    following_count = serializers.ReadOnlyField()
+    approval_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -43,7 +47,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id', 'owner', 'name', 'bio', 'job',
             'created_on', 'updated_on', 'image',
             'is_owner', 'employer', 'following_id',
-            'approval_id',
+            'approval_id', 'posts_count', 'following_count',
+            'followers_count', 'approval_count',
         ]
 
     def to_representation(self, instance):
