@@ -5,6 +5,9 @@ from .serializers import CommentSerializer, CommentDetailSerializer
 
 
 class CommentList(generics.ListCreateAPIView):
+    """
+    List and create comments if user is logged in.
+    """
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Comment.objects.all()
@@ -14,6 +17,10 @@ class CommentList(generics.ListCreateAPIView):
 
 
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Display comment details, update comment data of delete it, if
+    user is owner and logged in.
+    """
     permission_classes = [IsOwnerOrReadOnly]
     serializer_class = CommentDetailSerializer
     queryset = Comment.objects.all()
