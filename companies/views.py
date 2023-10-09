@@ -1,77 +1,59 @@
-from rest_framework.views import APIView
-from django.http import Http404
-from rest_framework import status, permissions
-from rest_framework.response import Response
-
+from rest_framework import serializers, permissions, generics
 from .models import Company
 from .serializers import CompanySerializer
 from craft_api.permissions import IsOwnerOrReadOnly
 
 
-class CompanyList(APIView):
+class CompanyList(generics.ListCreateAPIView):
     """
     Lists all companies.
     Allows a single user to create a maximum of 3 companies.
+    Validates if company is already in the list or not.
     """
     serializer_class = CompanySerializer
-    permission_classes = [
-        permissions.IsAuthenticatedOrReadOnly
-    ]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    queryset = Company.objects.all()
 
-    def get(self, request):
-        companies = Company.objects.all()
-        serializer = CompanySerializer(
-            companies, many=True, context={'request': request}
-        )
-        return Response(serializer.data)
-
-    def post(self, request):
-        companies_count = Company.objects.filter(owner=request.user).count()
+    def validate_company(self, company_title, company_location):
+        """
+        Validates Company creation.
+        If company is already in the list a ValidationError is raised.
+        If owner already has 3 companies in the ölist a ValidationError
+        is raised.
+        """
+        # Check the user's company count
+        companies_count = Company.objects.filter(
+            owner=self.request.user).count()
 
         if companies_count >= 3:
-            return Response(
-                {
-                    "message": (
-                        "You have reached the max profile "
-                        "limit of 3 companies."
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST
+            raise serializers.ValidationError(
+                "You have reached the max profile limit of 3 companies."
             )
 
-        company_title = request.data.get('name')
-        company_location = request.data.get('location')
-
+        # Check if a company with the same title and location exists
         existing_company = Company.objects.filter(
             name=company_title,
             location=company_location
         ).first()
 
         if existing_company:
-            return Response(
-                {
-                    "message": (
-                        f"A company with the title '{company_title}'"
-                        f" and location '{company_location}' already exists."
-                    )
-                },
-                status=status.HTTP_400_BAD_REQUEST
+            raise serializers.ValidationError(
+                f"A company with the title '{company_title}'"
+                f" and location '{company_location}' already exists."
             )
 
-        serializer = CompanySerializer(
-            data=request.data, context={'request': request}
-        )
-        if serializer.is_valid():
-            serializer.save(owner=request.user)
-            return Response(
-                serializer.data, status=status.HTTP_201_CREATED
-            )
-        return Response(
-            serializer.errors, status=status.HTTP_400_BAD_REQUEST
-        )
+    def perform_create(self, serializer):
+        """
+        Creates a company but first validates the company input.
+        """
+        company_title = serializer.validated_data.get('name')
+        company_location = serializer.validated_data.get('location')
+        self.validate_company(company_title, company_location)
+
+        serializer.save(owner=self.request.user)
 
 
-class CompanyDetail(APIView):
+class CompanyDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Lists all company details.
     Allows the company instance owner to edit the details, as well
@@ -79,35 +61,4 @@ class CompanyDetail(APIView):
     """
     serializer_class = CompanySerializer
     permission_classes = [IsOwnerOrReadOnly]
-
-    def get_object(self, pk):
-        try:
-            company = Company.objects.get(pk=pk)
-            self.check_object_permissions(self.request, company)
-            return company
-        except Company.DoesNotExist:
-            raise Http404
-
-    def get(self, request, pk):
-        company = self.get_object(pk)
-        serializer = CompanySerializer(
-            company, context={'request': request}
-            )
-        return Response(serializer.data)
-
-    def put(self, request, pk):
-        company = self.get_object(pk)
-        serializer = CompanySerializer(
-            company, data=request.data, context={'request': request}
-            )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        company = self.get_object(pk)
-        company.delete()
-        return Response(
-            status=status.HTTP_204_NO_CONTENT
-        )
+    queryset = Company.objects.all()
