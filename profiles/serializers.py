@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Profile
 from companies.models import Company
 from followers.models import Follower
+from approvals.models import Approval
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -12,6 +13,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
     following_id = serializers.SerializerMethodField()
+    approval_id = serializers.SerializerMethodField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -20,10 +22,19 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_following_id(self, obj):
         user = self.context['request'].user
         if user.is_authenticated:
-            following = Follow.objects.filter(
+            following = Follower.objects.filter(
                 owner=user, followed=obj.owner
             ).first()
             return following.id if following else None
+        return None
+
+    def get_approval_id(self, obj):
+        user = self.context['request'].user
+        if user.is_authenticated:
+            approval = Approval.objects.filter(
+                owner=user, profile=obj
+            ).first()
+            return approval.id if approval else None
         return None
 
     class Meta:
@@ -32,6 +43,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'id', 'owner', 'name', 'bio', 'job',
             'created_on', 'updated_on', 'image',
             'is_owner', 'employer', 'following_id',
+            'approval_id',
         ]
 
     def to_representation(self, instance):

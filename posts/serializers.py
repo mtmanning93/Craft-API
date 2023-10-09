@@ -16,6 +16,9 @@ class PostSerializer(serializers.ModelSerializer):
     like_id = serializers.SerializerMethodField()
 
     def validate_image(self, value):
+        """
+        Validates uploaded image size.
+        """
         if value.size > 1024 * 1024 * 2:
             raise serializers.ValidationError(
                 'Image size larger than 2MB!'
