@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import Follower
 
 
-class FollowSerializer(serializers.ModelSerializer):
+class FollowerSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
     followed_profile = serializers.ReadOnlyField(source='followed.username')
 
