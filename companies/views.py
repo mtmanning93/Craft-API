@@ -1,5 +1,10 @@
 from django.db.models import Count
-from rest_framework import serializers, permissions, generics, filters
+from rest_framework import (
+    serializers,
+    permissions,
+    generics,
+    filters
+)
 from .models import Company
 from .serializers import CompanySerializer
 from craft_api.permissions import IsOwnerOrReadOnly
