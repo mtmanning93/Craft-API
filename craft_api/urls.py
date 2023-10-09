@@ -23,4 +23,5 @@ urlpatterns = [
     path('', include('companies.urls')),
     path('', include('posts.urls')),
     path('', include('comments.urls')),
+    path('', include('likes.urls')),
 ]
