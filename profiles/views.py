@@ -50,9 +50,7 @@ class ProfileDetail(APIView):
         serializer = ProfileSerializer(
             profile, data=request.data, context={'request': request}
             )
-        
         if serializer.is_valid():
             serializer.save()
-            print(f"USERS_ = {profile.employer}")
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

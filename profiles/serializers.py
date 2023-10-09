@@ -24,7 +24,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         """
-        Convert profile employer field from company.pk into 
+        Convert profile employer field from company.pk into
         company.name and company.location in a readable string format.
         """
         data = super().to_representation(instance)

@@ -11,6 +11,7 @@ class Company(models.Model):
     name = models.CharField(max_length=100)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     location = models.CharField(max_length=100, blank=True)
+    type = models.CharField(max_length=100, blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
