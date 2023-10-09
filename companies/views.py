@@ -1,4 +1,5 @@
-from rest_framework import serializers, permissions, generics
+from django.db.models import Count
+from rest_framework import serializers, permissions, generics, filters
 from .models import Company
 from .serializers import CompanySerializer
 from craft_api.permissions import IsOwnerOrReadOnly
@@ -12,7 +13,15 @@ class CompanyList(generics.ListCreateAPIView):
     """
     serializer_class = CompanySerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Company.objects.all()
+    queryset = Company.objects.annotate(
+        employee_count=Count('current_employee', distinct=True)
+    ).order_by('created_on')
+    filter_backends = [
+        filters.OrderingFilter
+    ]
+    ordering_fields = [
+        'employee_count'
+    ]
 
     def validate_company(self, company_title, company_location):
         """
@@ -61,4 +70,6 @@ class CompanyDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     serializer_class = CompanySerializer
     permission_classes = [IsOwnerOrReadOnly]
-    queryset = Company.objects.all()
+    queryset = Company.objects.annotate(
+        employee_count=Count('current_employee', distinct=True)
+    ).order_by('created_on')

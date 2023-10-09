@@ -9,6 +9,7 @@ class CompanySerializer(serializers.ModelSerializer):
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
+    employee_count = serializers.ReadOnlyField()
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -18,5 +19,5 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = [
             'id', 'name', 'owner', 'location', 'type', 'created_on',
-            'is_owner',
+            'is_owner', 'employee_count',
         ]
