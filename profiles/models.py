@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
+from companies.models import Company
 
 
 class Profile(models.Model):
@@ -14,6 +15,10 @@ class Profile(models.Model):
     name = models.CharField(max_length=255, blank=True)
     bio = models.TextField(blank=True)
     job = models.CharField(max_length=100, blank=True)
+    employer = models.ForeignKey(
+        Company, on_delete=models.SET_NULL, blank=True, null=True,
+        related_name='current_employee'
+        )
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
     image = models.ImageField(
