@@ -6,7 +6,8 @@ class CommentSerializer(serializers.ModelSerializer):
     """
     Serializer for the Comment model.
     'is_owner' checks if the request user owns the profile.
-    User 'profile_id' and 'profile_image' also included as read only.
+    User 'profile_id' and 'profile_image' fields also included as read only,
+    when comment list returned.
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     is_owner = serializers.SerializerMethodField()
@@ -24,3 +25,11 @@ class CommentSerializer(serializers.ModelSerializer):
             'updated_on', 'is_owner', 'profile_id',
             'profile_image',
         ]
+
+
+class CommentDetailSerializer(CommentSerializer):
+    """
+    Serializer for the Comment model.
+    Only used in Comment detail view.
+    """
+    post = serializers.ReadOnlyField(source='post.id')
