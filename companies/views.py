@@ -15,12 +15,13 @@ class CompanyList(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Company.objects.annotate(
         employee_count=Count('current_employee', distinct=True)
-    ).order_by('created_on')
+    ).order_by('name')
     filter_backends = [
         filters.OrderingFilter
     ]
     ordering_fields = [
-        'employee_count'
+        'employee_count',
+        'owner__username',
     ]
 
     def validate_company(self, company_title, company_location):
