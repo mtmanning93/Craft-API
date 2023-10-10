@@ -37,6 +37,7 @@ class ProfileList(generics.ListAPIView):
         'name',
         'job',
         'employer__name',
+        'employer__location',
     ]
     filterset_fields = [
         'owner__following__followed__profile',
