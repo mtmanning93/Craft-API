@@ -1,4 +1,5 @@
 from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from craft_api.permissions import IsOwnerOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
@@ -14,6 +15,7 @@ class CommentList(generics.ListCreateAPIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
     ]
     ordering_fields = [
         'owner__username',
@@ -21,6 +23,10 @@ class CommentList(generics.ListCreateAPIView):
     search_fields = [
         'owner__username',
         'content',
+    ]
+    filterset_fields = [
+        'post',
+        'post__owner',
     ]
 
     def perform_create(self, serializer):

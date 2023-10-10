@@ -40,6 +40,7 @@ class CompanyList(generics.ListCreateAPIView):
     filterset_fields = [
         # all owner companies
         'owner__profile',
+        'location',
     ]
 
     def validate_company(self, company_title, company_location):
