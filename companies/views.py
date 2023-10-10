@@ -5,6 +5,7 @@ from rest_framework import (
     generics,
     filters
 )
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Company
 from .serializers import CompanySerializer
 from craft_api.permissions import IsOwnerOrReadOnly
@@ -24,6 +25,7 @@ class CompanyList(generics.ListCreateAPIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
     ]
     ordering_fields = [
         'employee_count',
@@ -34,6 +36,10 @@ class CompanyList(generics.ListCreateAPIView):
         'name',
         'location',
         'type',
+    ]
+    filterset_fields = [
+        # all owner companies
+        'owner__profile',
     ]
 
     def validate_company(self, company_title, company_location):
