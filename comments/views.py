@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
 from craft_api.permissions import IsOwnerOrReadOnly
 from .models import Comment
 from .serializers import CommentSerializer, CommentDetailSerializer
@@ -10,7 +10,18 @@ class CommentList(generics.ListCreateAPIView):
     """
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by('-created_on')
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+    ]
+    ordering_fields = [
+        'owner__username',
+    ]
+    search_fields = [
+        'owner__username',
+        'content',
+    ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
