@@ -22,11 +22,18 @@ class CompanyList(generics.ListCreateAPIView):
         employee_count=Count('current_employee', distinct=True)
     ).order_by('name')
     filter_backends = [
-        filters.OrderingFilter
+        filters.OrderingFilter,
+        filters.SearchFilter,
     ]
     ordering_fields = [
         'employee_count',
         'owner__username',
+    ]
+    search_fields = [
+        'owner__username',
+        'name',
+        'location',
+        'type',
     ]
 
     def validate_company(self, company_title, company_location):
