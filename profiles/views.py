@@ -1,5 +1,6 @@
 from django.db.models import Count
 from rest_framework import generics, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Profile
 from .serializers import ProfileSerializer
 from craft_api.permissions import IsOwnerOrReadOnly
@@ -21,6 +22,7 @@ class ProfileList(generics.ListAPIView):
     filter_backends = [
         filters.OrderingFilter,
         filters.SearchFilter,
+        DjangoFilterBackend,
     ]
     ordering_fields = [
         'posts_count',
@@ -35,6 +37,9 @@ class ProfileList(generics.ListAPIView):
         'name',
         'job',
         'employer__name',
+    ]
+    filterset_fields = [
+        'owner__following__followed__profile',
     ]
 
 
