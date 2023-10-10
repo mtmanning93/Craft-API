@@ -19,7 +19,8 @@ class ProfileList(generics.ListAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
     filter_backends = [
-        filters.OrderingFilter
+        filters.OrderingFilter,
+        filters.SearchFilter,
     ]
     ordering_fields = [
         'posts_count',
@@ -28,6 +29,12 @@ class ProfileList(generics.ListAPIView):
         'approval_count',
         'owner__following__created_on',
         'owner__followed__created_on',
+    ]
+    search_fields = [
+        'owner__username',
+        'name',
+        'job',
+        'employer__name',
     ]
 
 
