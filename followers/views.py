@@ -1,4 +1,5 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, filters
+from django_filters.rest_framework import DjangoFilterBackend
 from craft_api.permissions import IsOwnerOrReadOnly
 from .models import Follower
 from .serializers import FollowerSerializer
@@ -10,7 +11,24 @@ class FollowerList(generics.ListCreateAPIView):
     """
     serializer_class = FollowerSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    queryset = Follower.objects.all()
+    queryset = Follower.objects.all().order_by('-created_on')
+    filter_backends = [
+        filters.OrderingFilter,
+        filters.SearchFilter,
+        DjangoFilterBackend,
+    ]
+    ordering_fields = [
+        'owner__username',
+        'created_on',
+        'followed__username',
+    ]
+    search_fields = [
+        'owner__username'
+    ]
+    filterset_fields = [
+        'owner',
+        'followed__profile'
+    ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
