@@ -1,8 +1,8 @@
-from dj_rest_auth.serializers import UserDetailsSerializer
 from rest_framework import serializers
+from dj_rest_auth.serializers import UserDetailsSerializer
 
 
-class CurrentUserSerializer(UserDetailsSerializer):
+class UserSerializer(UserDetailsSerializer):
     profile_id = serializers.ReadOnlyField(source='profile.id')
     profile_image = serializers.ReadOnlyField(source='profile.image.url')
 
