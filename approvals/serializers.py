@@ -10,12 +10,25 @@ class ApprovalSerializer(serializers.ModelSerializer):
     Create method ensure no duplicate approvals.
     """
     owner = serializers.ReadOnlyField(source='owner.username')
+    approved_profile = serializers.SerializerMethodField()
 
     class Meta:
         model = Approval
         fields = [
-            'id', 'owner', 'profile', 'created_on'
+            'id', 'owner', 'profile', 'created_on', 'approved_profile',
         ]
+
+    def get_approved_profile(self, obj):
+        return obj.profile.owner.username
+
+    def to_representation(self, instance):
+        """
+        Convert approved profile id field from profile.pk into
+        profile.username in a readable string format.
+        """
+        representation = super().to_representation(instance)
+        representation['profile'] = representation.pop('approved_profile')
+        return representation
 
     def create(self, validated_data):
         try:
