@@ -37,6 +37,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'DATETIME_FORMAT': '%d/%m/%Y - %H:%M',
 }
+
 if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
@@ -64,6 +65,7 @@ DEBUG = 'DEV' in os.environ
 ALLOWED_HOSTS = [
     'localhost',
     '8000-mtmanning93-craftapi-uuv7499fr3p.ws-eu105.gitpod.io',
+    'https://craft-api-aeec93e46ff2.herokuapp.com/',
     ]
 
 
