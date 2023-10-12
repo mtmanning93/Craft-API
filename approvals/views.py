@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, permissions, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from craft_api.permissions import IsOwnerOrReadOnly
 from .models import Approval
@@ -31,6 +31,10 @@ class ApprovalList(generics.ListCreateAPIView):
     ]
 
     def perform_create(self, serializer):
+        if self.request.user == serializer.validated_data['profile'].owner:
+            raise serializers.ValidationError(
+                "You cannot approve your own profile."
+                )
         serializer.save(owner=self.request.user)
 
 
