@@ -1,3 +1,4 @@
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db import IntegrityError
 from rest_framework import serializers
 from .models import Approval
@@ -11,15 +12,19 @@ class ApprovalSerializer(serializers.ModelSerializer):
     """
     owner = serializers.ReadOnlyField(source='owner.username')
     approved_profile = serializers.SerializerMethodField()
+    created_on = serializers.SerializerMethodField()
+
+    def get_approved_profile(self, obj):
+        return obj.profile.owner.username
+
+    def get_created_on(self, obj):
+        return naturaltime(obj.created_on)
 
     class Meta:
         model = Approval
         fields = [
             'id', 'owner', 'profile', 'created_on', 'approved_profile',
         ]
-
-    def get_approved_profile(self, obj):
-        return obj.profile.owner.username
 
     def to_representation(self, instance):
         """
