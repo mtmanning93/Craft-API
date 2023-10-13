@@ -1,8 +1,9 @@
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIRequestFactory
 from django.contrib.auth.models import User
 from profiles.models import Profile
+from profiles.views import ProfileDetail
 from profiles.serializers import ProfileSerializer
 
 
@@ -46,7 +47,7 @@ class ProfileDetailTest(APITestCase):
         # Verify that the response status code is HTTP 200 OK
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_retrieval_specific_profile(self):
+    def test_retrieval_of_specific_profile(self):
         """
         Checks response status code.
         Checks response data is correct when retrieving a specific profile.
@@ -74,7 +75,8 @@ class ProfileDetailTest(APITestCase):
             - job
             - bio
         """
-        self.client.login(username=self.user.username, password='testpass')
+        self.client.login(
+            username=self.user.username, password='testpass')
 
         profile = Profile.objects.get(owner=self.user)
         url = reverse('profile-detail', args=[profile.pk])
@@ -98,3 +100,46 @@ class ProfileDetailTest(APITestCase):
         self.assertEqual(
             response.data['bio'], 'Hi im updated, i work at updated.'
         )
+
+    def test_profile_image_default_is_set(self):
+        """
+        Test to check if profile image is set to the default profile image
+        on profile creation
+        """
+        self.client.login(
+            username=self.user.username,
+            password=self.user.password
+        )
+
+        profile = Profile.objects.get(owner=self.user)
+        url = reverse('profile-detail', args=[profile.pk])
+
+        self.assertEqual(
+            profile.image,
+            '../user_defualt_icon_d7nivg.png'
+        )
+
+    def test_unauthorized_user_cannot_update_profile_fields(self):
+        """
+        Checks that an unauthorized user cannot update a profile with new data:
+            - job
+            - bio
+        """
+        user_profile = self.user.profile
+        # Create a request using the APIRequestFactory
+        factory = APIRequestFactory()
+        data = {'job': 'Updated Job', 'bio': 'Updated Bio'}
+        request = factory.patch(reverse('profile-detail', args=[user_profile.pk]), data=data, format='json')
+        # Create a different user (unauthorized user)
+        unauthorized_user = User.objects.create_user(username="unauthorized", password="unauthorizedpass")
+        # Authenticate the request with the unauthorized user
+        request.user = unauthorized_user
+        # Get the profile detail view
+        view = ProfileDetail.as_view()
+        # Perform a PATCH request to update job and bio fields
+        response = view(request, pk=user_profile.pk)
+
+        self.assertEqual(response.status_code, 403)  # Forbidden status code for unauthorized update
+        user_profile.refresh_from_db()  # Ensure no changes were made to the profile
+        self.assertEqual(user_profile.job, '')
+        self.assertEqual(user_profile.bio, '')
