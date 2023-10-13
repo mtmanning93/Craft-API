@@ -63,5 +63,5 @@ class ProfileSerializer(serializers.ModelSerializer):
                 company = Company.objects.get(pk=employer_pk)
                 data['employer'] = f"{company.name} - {company.location}"
             except Company.DoesNotExist:
-                data['employer'] = None
+                data['employer'] = 'null'
         return data
