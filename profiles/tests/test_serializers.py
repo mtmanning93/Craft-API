@@ -1,11 +1,12 @@
-from rest_framework.test import APITestCase, APIRequestFactory, APIClient
+from rest_framework.test import APIRequestFactory, APIClient
+from django.test import TestCase
 from django.contrib.auth.models import User
 from profiles.models import Profile
 from companies.models import Company
 from profiles.serializers import ProfileSerializer
 
 
-class ProfileSerializerTest(APITestCase):
+class ProfileSerializerTest(TestCase):
     """
     Test case for the ProfileSerializer, and the
     to_representation method.
