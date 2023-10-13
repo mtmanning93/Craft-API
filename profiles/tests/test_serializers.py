@@ -1,9 +1,9 @@
 from rest_framework.test import APIRequestFactory, APIClient
 from django.test import TestCase
 from django.contrib.auth.models import User
-from profiles.models import Profile
+from ..models import Profile
+from ..serializers import ProfileSerializer
 from companies.models import Company
-from profiles.serializers import ProfileSerializer
 
 
 class ProfileSerializerTest(TestCase):

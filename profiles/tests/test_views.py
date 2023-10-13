@@ -2,9 +2,9 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIRequestFactory
 from django.contrib.auth.models import User
-from profiles.models import Profile
-from profiles.views import ProfileDetail
-from profiles.serializers import ProfileSerializer
+from ..models import Profile
+from ..views import ProfileDetail
+from ..serializers import ProfileSerializer
 
 
 class ProfileListTest(APITestCase):
