@@ -129,17 +129,25 @@ class ProfileDetailTest(APITestCase):
         # Create a request using the APIRequestFactory
         factory = APIRequestFactory()
         data = {'job': 'Updated Job', 'bio': 'Updated Bio'}
-        request = factory.patch(reverse('profile-detail', args=[user_profile.pk]), data=data, format='json')
+        request = factory.patch(
+            reverse(
+                'profile-detail',
+                args=[user_profile.pk]
+                ), data=data, format='json'
+            )
         # Create a different user (unauthorized user)
-        unauthorized_user = User.objects.create_user(username="unauthorized", password="unauthorizedpass")
+        unauthorized_user = User.objects.create_user(
+            username="unauthorized", password="unauthorizedpass"
+            )
         # Authenticate the request with the unauthorized user
         request.user = unauthorized_user
         # Get the profile detail view
         view = ProfileDetail.as_view()
         # Perform a PATCH request to update job and bio fields
         response = view(request, pk=user_profile.pk)
-
-        self.assertEqual(response.status_code, 403)  # Forbidden status code for unauthorized update
-        user_profile.refresh_from_db()  # Ensure no changes were made to the profile
+        # Forbidden status code for unauthorized update
+        self.assertEqual(response.status_code, 403)
+        # Ensure no changes were made to the profile
+        user_profile.refresh_from_db()
         self.assertEqual(user_profile.job, '')
         self.assertEqual(user_profile.bio, '')
