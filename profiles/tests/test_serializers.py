@@ -7,7 +7,8 @@ from profiles.serializers import ProfileSerializer
 
 class ProfileSerializerTest(APITestCase):
     """
-    Test case for the ProfileSerializer and its methods.
+    Test case for the ProfileSerializer, and the
+    to_representation method.
     """
     def setUp(self):
         """
