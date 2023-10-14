@@ -61,7 +61,10 @@ class PostListViewTest(TestCase):
 
 
 class PostDetailViewTest(TestCase):
-
+    """
+    Testcase for the PostDetail view,
+    including updating and deleting as an authenticated user.
+    """
     def setUp(self):
         """
         Set up test data.
