@@ -59,7 +59,7 @@ class PostListViewTest(APITestCase):
         self.assertEqual(Post.objects.count(), 2)
 
 
-class PostDetailViewTest(TestCase):
+class PostDetailViewTest(APITestCase):
     """
     Testcase for the PostDetail view,
     including updating and deleting as an authenticated user.
