@@ -1,13 +1,12 @@
 from rest_framework.test import APITestCase, APIClient
-from rest_framework import status, serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework import status
 from django.urls import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files import File
 from django.contrib.auth.models import User
 from ..models import Post
 from ..serializers import PostSerializer
 from likes.models import Like
-
-from rest_framework.exceptions import ValidationError
 
 
 class PostSerializerTests(APITestCase):
@@ -110,3 +109,104 @@ class PostSerializerTests(APITestCase):
 
         self.assertIn('like_id', data)
         self.assertIsNone(data['like_id'])
+
+
+class PostSerializerImageValidationTests(APITestCase):
+    """
+    Tests the image validation method in the PostSerializer.
+    validate_image.
+    """
+    def setUp(self):
+        """
+        Set up test object instances
+        """
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+            )
+        self.client.force_authenticate(user=self.user)
+
+    def test_validate_image_valid(self):
+        """
+        Check whether a valid image can be uploaded.
+        """
+        image_file = open('posts/tests/test_images/test_valid.png', 'rb')
+
+        post_data = {
+            'title': 'Test Post',
+            'content': 'Test Content',
+            'image': File(image_file),
+        }
+
+        serializer = PostSerializer(data=post_data)
+
+        self.assertTrue(serializer.is_valid())
+
+    def test_validate_image_invalid_size(self):
+        """
+        Checks the ValidationError is raised with the correct message,
+        if the image uploaded is greater than 2mb, meaning the serializer
+        is invalid.
+        """
+        image_file = open('posts/tests/test_images/too_large.jpg', 'rb')
+
+        post_data = {
+            'title': 'Test Post',
+            'content': 'Test Content',
+            'image': File(image_file),
+        }
+
+        serializer = PostSerializer(data=post_data)
+
+        with self.assertRaises(ValidationError) as context:
+            serializer.is_valid(raise_exception=True)
+
+        self.assertEqual(
+            context.exception.detail['image'][0], 'Image size larger than 2MB!'
+            )
+
+    def test_validate_image_too_wide(self):
+        """
+        Tests the validate_image method raises the correct ValidationError
+        and message if the image width is larger than 4096px.
+        """
+        image_file = open('posts/tests/test_images/test_wide.png', 'rb')
+
+        post_data = {
+            'title': 'Test Post',
+            'content': 'Test Content',
+            'image': File(image_file),
+        }
+
+        serializer = PostSerializer(data=post_data)
+
+        with self.assertRaises(ValidationError) as context:
+            serializer.is_valid(raise_exception=True)
+
+        self.assertEqual(
+            context.exception.detail['image'][0],
+            'Image width larger than 4096px!'
+            )
+
+    def test_validate_image_too_high(self):
+        """
+        Tests the validate_image method raises the correct ValidationError
+        and message if the image height is larger than 4096px.
+        """
+        image_file = open('posts/tests/test_images/test_high.png', 'rb')
+
+        post_data = {
+            'title': 'Test Post',
+            'content': 'Test Content',
+            'image': File(image_file),
+        }
+
+        serializer = PostSerializer(data=post_data)
+
+        with self.assertRaises(ValidationError) as context:
+            serializer.is_valid(raise_exception=True)
+
+        self.assertEqual(
+            context.exception.detail['image'][0],
+            'Image height larger than 4096px!'
+            )
