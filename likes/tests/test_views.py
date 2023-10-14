@@ -90,7 +90,7 @@ class LikeDetailTest(APITestCase):
 
     def test_delete_like_unauthorized_user(self):
         """
-        Tests an unauthenticated users ability to delete a like,
+        Tests an unauthorized users ability to delete a like,
         should be forbidden unless the user owns the like instance.
         """
         self.client.force_authenticate(user=self.user1)
