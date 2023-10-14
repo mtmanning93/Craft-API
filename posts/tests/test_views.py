@@ -1,5 +1,4 @@
-from django.test import TestCase
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth.models import User
 from rest_framework import status
 from django.urls import reverse
@@ -7,7 +6,7 @@ from ..models import Post
 from ..serializers import PostSerializer
 
 
-class PostListViewTest(TestCase):
+class PostListViewTest(APITestCase):
     """
     Tests for the PostList view,
     including listing and creating.
