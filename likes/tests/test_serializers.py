@@ -23,7 +23,7 @@ class LikeSerializerTest(APITestCase):
 
     def test_like_creation(self):
         """
-        Teststhat the LikeSerializer can correctly create a
+        Tests that the LikeSerializer can correctly serialize a
         like with valid data.
         Checks the created like is associated with the correct post.
         """
