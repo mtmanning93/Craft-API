@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from rest_framework.test import APITestCase
+from rest_framework import serializers
 from django.contrib.auth.models import User
 from likes.models import Like
 from likes.serializers import LikeSerializer
@@ -49,6 +50,11 @@ class LikeSerializerTest(APITestCase):
         self.assertTrue(serialized_data2.is_valid())
 
         like1 = serialized_data1.save(owner=self.user)
-
         self.assertIsInstance(like1, Like)
-        self.assertRaises(IntegrityError)
+
+        with self.assertRaises(serializers.ValidationError) as context:
+            serialized_data2.save(owner=self.user)
+
+        self.assertEqual(
+            context.exception.detail['info'], 'possible duplicate'
+            )
