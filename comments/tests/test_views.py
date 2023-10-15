@@ -25,6 +25,11 @@ class CommentListAPITestCase(APITestCase):
             content='This is a test post'
             )
 
+        self.client.login(
+            username='testuser',
+            password='testpassword'
+            )
+
     def test_comment_list(self):
         Comment.objects.create(
             owner=self.user, post=self.post, content='comment 1'
@@ -32,8 +37,6 @@ class CommentListAPITestCase(APITestCase):
         Comment.objects.create(
             owner=self.user, post=self.post, content='comment 2'
             )
-
-        self.client.login(username='testuser', password='testpassword')
 
         response = self.client.get('/comments/')
 
@@ -44,10 +47,6 @@ class CommentListAPITestCase(APITestCase):
         """
         Tests a comment can be successfully created with valid data.
         """
-        self.client.login(
-            username='testuser', password='testpassword'
-            )
-
         data = {
             'post': self.post.id,
             'content': 'New Comment'
@@ -67,7 +66,7 @@ class CommentDetailTests(APITestCase):
     """
     def setUp(self):
         """
-        Setup test data.
+        Setup test data and user login.
         """
         self.user = User.objects.create_user(
             username='testuser',
@@ -80,16 +79,19 @@ class CommentDetailTests(APITestCase):
             content='This is a test post'
             )
 
+        self.comment = Comment.objects.create(
+            owner=self.user,
+            post=self.post,
+            content='Test Comment'
+            )
+
+        self.client.login(username='testuser', password='testpassword')
+
     def test_retrieval_of_comment_details(self):
         """
         Test the GET/ retrieval of a specific comment instance.
         """
-        comment = Comment.objects.create(
-            owner=self.user, post=self.post, content='Test comment'
-            )
-
-        self.client.login(username='testuser', password='testpassword')
-        response = self.client.get(f'/comments/{comment.id}/')
+        response = self.client.get(f'/comments/{self.comment.id}/')
 
         self.assertEqual(response.status_code, 200)
 
@@ -99,54 +101,49 @@ class CommentDetailTests(APITestCase):
         a success code.
         Checks the data is updated correctly.
         """
-        comment = Comment.objects.create(
-            owner=self.user, post=self.post, content='Test Comment'
-            )
-
-        self.client.login(username='testuser', password='testpassword')
-
         data = {
             'content': 'Test comment updates',
         }
 
         response = self.client.put(
-            f'/comments/{comment.id}/', data, format='json'
+            f'/comments/{self.comment.id}/', data, format='json'
             )
 
-        comment.refresh_from_db()
+        self.comment.refresh_from_db()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(comment.content, 'Test comment updates')
+        self.assertEqual(self.comment.content, 'Test comment updates')
 
     def test_delete_comment_authentcated_user_comment_owner(self):
-        comment = Comment.objects.create(
-            owner=self.user, post=self.post, content='Test Comment'
-            )
-
-        self.client.login(username='testuser', password='testpassword')
-
-        response = self.client.delete(f'/comments/{comment.id}/')
+        """
+        Checks is an authenticated user who owns the comment can delete the
+        comment instance.
+        """
+        response = self.client.delete(f'/comments/{self.comment.id}/')
 
         self.assertEqual(response.status_code, 204)
 
-    def test_delete_comment_authentcated_user_not_owner(self):
-        comment = Comment.objects.create(
-            owner=self.user, post=self.post, content='Test Comment'
-            )
+    def test_delete_comment_authenticated_user_not_owner(self):
+        """
+        Checks if an authenticated user who doesnt own the post receives
+        a 403_FORBIDDEN error when attempting to delete the post.
+        """
         not_owner = User.objects.create_user(
             username='notowner', password='testpassword'
             )
         self.client.login(username='notowner', password='testpassword')
 
-        response = self.client.delete(f'/comments/{comment.id}/')
+        response = self.client.delete(f'/comments/{self.comment.id}/')
 
         self.assertEqual(response.status_code, 403)
 
     def test_delete_comment_unauthentcated_user(self):
-        comment = Comment.objects.create(
-            owner=self.user, post=self.post, content='Test Comment'
-            )
+        """
+        Checks if an unauthenticated (logged out) user raises a 403 status code
+        when attempting to delete a post.
+        """
+        self.client.logout()
 
-        response = self.client.delete(f'/comments/{comment.id}/')
+        response = self.client.delete(f'/comments/{self.comment.id}/')
 
         self.assertEqual(response.status_code, 403)
