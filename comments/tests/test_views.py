@@ -23,20 +23,20 @@ class CommentListAPITestCase(APITestCase):
             owner=self.user,
             title='Test post',
             content='This is a test post'
-            )
+        )
 
         self.client.login(
             username='testuser',
             password='testpassword'
-            )
+        )
 
     def test_comment_list(self):
         Comment.objects.create(
             owner=self.user, post=self.post, content='comment 1'
-            )
+        )
         Comment.objects.create(
             owner=self.user, post=self.post, content='comment 2'
-            )
+        )
 
         response = self.client.get('/comments/')
 

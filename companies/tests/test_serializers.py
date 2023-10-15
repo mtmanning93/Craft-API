@@ -50,7 +50,7 @@ class CompanySerializerTests(APITestCase):
 
     def test_get_is_owner_method(self):
         """
-        Checs the is_owner field value is set to True
+        Checks the is_owner field value is set to True
         if the owner is viewing the company.
         """
         self.client.force_authenticate(user=self.user)
