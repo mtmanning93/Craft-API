@@ -40,8 +40,8 @@ class ApprovalSerializerTests(APITestCase):
     def test_to_representation_method(self):
         """
         After serializing the approval instance, checks to see if the
-        'approved_profile' field is converted to 'profile' and that 'profile' is
-        serialized as the name instead of profile.id.
+        'approved_profile' field is converted to 'profile' and that 'profile'
+        is serialized as the name instead of profile.id.
         """
         serializer = ApprovalSerializer(instance=self.approval)
 
