@@ -4,9 +4,17 @@ from ..models import Company
 from ..serializers import CompanySerializer
 
 
-class CompanySerializerAPITest(APITestCase):
+class CompanySerializerTests(APITestCase):
+    """
+    Testcase for the CompanySerializer, including:
+        - fields
+        - get_is_owner method
+        - employee_count field
+    """
     def setUp(self):
-
+        """
+        Setup the testcase user and company objects.
+        """
         self.user = User.objects.create_user(
             username='testuser', password='testpassword'
             )
@@ -17,7 +25,12 @@ class CompanySerializerAPITest(APITestCase):
             owner=self.user
         )
 
-    def test_company_serializer(self):
+        self.employee = User.objects.create_user(
+            username='employee',
+            password='testpassword'
+        )
+
+    def test_company_serialized_fields(self):
         """
         Checks all fields expected are in the serialized data.
         """
@@ -46,3 +59,39 @@ class CompanySerializerAPITest(APITestCase):
         company_data = response.data
 
         self.assertTrue(company_data['is_owner'], True)
+
+    def test_employee_count_increments(self):
+        """
+        Checks that the employee_count field will increment
+        when a user updates their profile.employer field to a
+        company instance as their employer.
+        Uses profile.employer field related_name='current_employee'.
+        """
+        self.assertEqual(self.company.current_employee.count(), 0)
+
+        # Add employer instance to profile
+        self.employee.profile.employer = self.company
+        self.employee.profile.save()
+        self.company.refresh_from_db()
+
+        self.assertEqual(self.company.current_employee.count(), 1)
+
+    def test_employee_count_decrement(self):
+        """
+        Checks that the employee_count field will decrement
+        when a user updates their profile to remove the company instance
+        as their employer.
+        Uses profile.employer field related_name='current_employee'.
+        """
+        # Add employer instance
+        self.employee.profile.employer = self.company
+        self.employee.profile.save()
+        self.company.refresh_from_db()
+        self.assertEqual(self.company.current_employee.count(), 1)
+
+        # Remove employer
+        self.employee.profile.employer = None
+        self.employee.profile.save()
+        self.company.refresh_from_db()
+
+        self.assertEqual(self.company.current_employee.count(), 0)
