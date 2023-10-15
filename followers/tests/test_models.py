@@ -8,16 +8,17 @@ class FollowerModelTest(TestCase):
     """
     Testscase for the Follower Model.
     """
+
     def setUp(self):
         """
         Set up test user objects.
         """
         self.user1 = User.objects.create(
             username='user1', password='password1'
-            )
+        )
         self.user2 = User.objects.create(
             username='user2', password='password2'
-            )
+        )
 
     def test_follower_object_with_valid_data_creation(self):
         """
@@ -26,7 +27,7 @@ class FollowerModelTest(TestCase):
         """
         follower = Follower.objects.create(
             owner=self.user1, followed=self.user2
-            )
+        )
 
         self.assertIsInstance(follower, Follower)
         self.assertEqual(follower.owner, self.user1)
@@ -39,7 +40,7 @@ class FollowerModelTest(TestCase):
         """
         follower = Follower.objects.create(
             owner=self.user1, followed=self.user2
-            )
+        )
 
         # Try to create the same follower instance
         with self.assertRaises(IntegrityError):
@@ -51,5 +52,5 @@ class FollowerModelTest(TestCase):
         """
         follower = Follower.objects.create(
             owner=self.user1, followed=self.user2
-            )
+        )
         self.assertEqual(str(follower), f'{self.user1} {self.user2}')
