@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from rest_framework import status
 from django.contrib.auth.models import User
 from ..permissions import IsOwnerOrReadOnly
 from posts.models import Post
@@ -35,7 +36,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
 
         response = self.client.get(f'/posts/{self.user1_object.pk}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         update_data = {
             'title': 'Updated title'
@@ -45,7 +46,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
             f'/posts/{self.user1_object.pk}/', update_data
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_not_owner_user_has_only_read_access(self):
         """
@@ -54,7 +55,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
         """
         self.client.force_authenticate(self.user2)
         response = self.client.get(f'/posts/{self.user1_object.pk}/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         update_data = {
             'title': 'Updated title attempt'
@@ -64,7 +65,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
             f'/posts/{self.user1_object.pk}/', update_data
             )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_unregistered_user_can_read_post_not_update(self):
         """
@@ -73,7 +74,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
         """
         response = self.client.get(f'/posts/{self.user1_object.pk}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         update_data = {
             'name': 'Updated Object'
@@ -83,4 +84,4 @@ class IsOwnerOrReadOnlyTest(APITestCase):
             f'/posts/{self.user1_object.pk}/', update_data
         )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from rest_framework import status
 from django.contrib.auth.models import User
 from ..models import Company
 
@@ -12,7 +13,6 @@ class CompanyModelTest(TestCase):
         """
         Setup user and company instances for tests.
         """
-        # Create a user for testing
         self.user = User.objects.create_user(
             username='testuser',
             password='testpassword'
@@ -56,7 +56,7 @@ class CompanyModelTest(TestCase):
             'type': 'Testers'
         })
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         company = Company.objects.get(name='Testing Co')
         self.assertEqual(company.owner, self.user)

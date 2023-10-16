@@ -1,5 +1,6 @@
-from rest_framework.test import APIRequestFactory, APIClient
 from django.test import TestCase
+from rest_framework.test import APIClient
+from rest_framework import status
 from django.contrib.auth.models import User
 from ..models import Profile
 from ..serializers import ProfileSerializer
@@ -25,14 +26,10 @@ class ProfileSerializerTest(TestCase):
         """
         Checks the ProrfileSerializer serializes updated data in the profile.
         """
-        new_name = 'Updated Name'
-        new_bio = 'Updated Bio'
-        new_job = 'Updated Job'
-
         data = {
-            'name': new_name,
-            'bio': new_bio,
-            'job': new_job,
+            'name': 'Updated name',
+            'bio': 'Updated bio',
+            'job': 'Updated job',
         }
 
         serializer = ProfileSerializer(
@@ -45,13 +42,12 @@ class ProfileSerializerTest(TestCase):
         if serializer.is_valid():
             serializer.save()
 
-        # Retrieve the updated profile from the database
         updated_profile = Profile.objects.get(owner=self.user)
-        # Add assertions to verify the updated data
+
         self.assertEqual(self.profile.owner.username, 'testuser')
-        self.assertEqual(updated_profile.name, new_name)
-        self.assertEqual(updated_profile.bio, new_bio)
-        self.assertEqual(updated_profile.job, new_job)
+        self.assertEqual(updated_profile.name, 'Updated name')
+        self.assertEqual(updated_profile.bio, 'Updated bio')
+        self.assertEqual(updated_profile.job, 'Updated job')
 
     def test_to_representation_employer_conversion(self):
         """
@@ -72,12 +68,10 @@ class ProfileSerializerTest(TestCase):
         self.profile.employer = company
         self.profile.save()
 
-        profile_detail_url = f'/profiles/{self.profile.pk}/'
-        response = self.client.get(profile_detail_url)
+        response = self.client.get(f'/profiles/{self.profile.pk}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # Serialize the profile using the serializer with the request context
         serializer = ProfileSerializer(
             instance=self.profile, context={'request': response.wsgi_request}
         )
@@ -94,27 +88,27 @@ class ProfileSerializerTest(TestCase):
         Checks if the profile.employer has an invalid company,
         e.g. company deleted. That the user employer is represented as 'null'.
         """
-        # Create a test company owner
         company_owner = User.objects.create_user(
             username='companyowner',
             password='companyownerpass'
         )
+
         company = Company.objects.create(
             name='Test Company',
             location='Test Location',
             owner=company_owner
             )
+
         profile = self.user.profile
         profile.employer = company
         profile.save()
+
         # Delete the company before serializer
         company.delete()
 
-        profile_detail_url = f'/profiles/{profile.pk}/'
-        # Make a GET request to the profile detail URL
-        response = self.client.get(profile_detail_url)
+        response = self.client.get(f'/profiles/{profile.pk}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Serialize the profile using the serializer with the request context
         serializer = ProfileSerializer(

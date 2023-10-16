@@ -1,7 +1,6 @@
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
-from rest_framework.reverse import reverse
 from rest_framework import status
 from ..models import Comment
 from ..serializers import CommentSerializer
@@ -40,7 +39,7 @@ class CommentSerializerTests(APITestCase):
 
         response = self.client.get('/comments/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
 
     def test_comment_serializer_valid_data(self):
@@ -53,7 +52,7 @@ class CommentSerializerTests(APITestCase):
             'content': 'This is a new comment.',
         }
         response = self.client.post('/comments/', data, format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_comment_serializer_invalid_data(self):
         """
@@ -66,7 +65,7 @@ class CommentSerializerTests(APITestCase):
             'content': 'Invalid data',
         }
         response = self.client.post('/comments/', data, format='json')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_comment_serializer_when_updating_comment_valid_data(self):
         """

@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from rest_framework import status
 from django.contrib.auth.models import User
 from ..models import Company
 from ..serializers import CompanySerializer
@@ -36,7 +37,7 @@ class CompanySerializerTests(APITestCase):
         """
         response = self.client.get(f'/companies/{self.company.id}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         data = response.data
 

@@ -13,10 +13,10 @@ class FollowerModelTest(TestCase):
         """
         Set up test user objects.
         """
-        self.user1 = User.objects.create(
+        self.user1 = User.objects.create_user(
             username='user1', password='password1'
         )
-        self.user2 = User.objects.create(
+        self.user2 = User.objects.create_user(
             username='user2', password='password2'
         )
 

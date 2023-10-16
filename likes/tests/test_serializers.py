@@ -1,4 +1,3 @@
-from django.db import IntegrityError
 from rest_framework.test import APITestCase
 from rest_framework import serializers
 from django.contrib.auth.models import User

@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase, APIClient
-from rest_framework import serializers
+from rest_framework import status, serializers
 from django.contrib.auth.models import User
 from ..models import Company
 
@@ -32,7 +32,7 @@ class CompanyListTests(APITestCase):
         }
 
         response = self.client.post('/companies/', data, format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_validate_company_with_valid_new_company_data(self):
         """
@@ -44,7 +44,7 @@ class CompanyListTests(APITestCase):
             }
         response = self.client.post('/companies/', valid_new_data)
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_validate_company_with_duplicate_company_name_and_location(self):
         """
@@ -52,7 +52,6 @@ class CompanyListTests(APITestCase):
         duplicate company instance with a duplicate 'name' and 'location'
         field.
         """
-        # Create a company
         existing_company = Company.objects.create(
             name='Test Company', location='Test Location', owner=self.user
             )
@@ -65,7 +64,7 @@ class CompanyListTests(APITestCase):
             '/companies/', duplicate_data
             )
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         # Check the error message in the ValidationError
         self.assertEqual(
@@ -96,7 +95,7 @@ class CompanyListTests(APITestCase):
 
         response = self.client.post('/companies/', company_4_data)
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
         self.assertEqual(
             str(response.data[0]),
@@ -131,7 +130,7 @@ class CompanyDetailTests(APITestCase):
         Checks the GET or retrieval method of a specific comapny instance.
         """
         response = self.client.get(f'/companies/{self.company.id}/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_company_details(self):
         """
@@ -147,7 +146,7 @@ class CompanyDetailTests(APITestCase):
             f'/companies/{self.company.id}/', data, format='json'
             )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.company.refresh_from_db()
         self.assertEqual(self.company.name, 'New Company Name')
         self.assertEqual(self.company.location, 'New Location')
@@ -158,7 +157,7 @@ class CompanyDetailTests(APITestCase):
         who owns the company instance.
         """
         response = self.client.delete(f'/companies/{self.company.id}/')
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_company_instance_authenticated_not_owner(self):
         """
@@ -172,4 +171,4 @@ class CompanyDetailTests(APITestCase):
             username='newuser', password='testpassword'
             )
         response = self.client.delete(f'/companies/{self.company.id}/')
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

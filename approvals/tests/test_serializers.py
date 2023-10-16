@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework.exceptions import ValidationError
-from rest_framework import status, serializers
+from rest_framework import serializers
 from django.contrib.auth.models import User
 from ..models import Approval
 from ..serializers import ApprovalSerializer
@@ -49,7 +49,7 @@ class ApprovalSerializerTests(APITestCase):
         self.assertNotIn('approved_profile', serializer.data)
         self.assertEqual(serializer.data['profile'], self.user1.username)
 
-    def test_create_duplicate_approval(self):
+    def test_creation_of_duplicate_approval(self):
         """
         Checks that if a duplicate approval is created, a custom
         ValidationError is raised and the correct error message is displayed.

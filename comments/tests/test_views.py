@@ -1,4 +1,5 @@
 from rest_framework.test import APITestCase
+from rest_framework import status
 from django.contrib.auth.models import User
 from ..models import Comment
 from posts.models import Post
@@ -31,6 +32,9 @@ class CommentListAPITestCase(APITestCase):
         )
 
     def test_comment_list(self):
+        """
+        Checks the newly created comments are listed correctly.
+        """
         Comment.objects.create(
             owner=self.user, post=self.post, content='comment 1'
         )
@@ -40,7 +44,7 @@ class CommentListAPITestCase(APITestCase):
 
         response = self.client.get('/comments/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 2)
 
     def test_comment_creation(self):
@@ -54,7 +58,7 @@ class CommentListAPITestCase(APITestCase):
 
         response = self.client.post('/comments/', data, format='json')
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
 class CommentDetailTests(APITestCase):
@@ -93,7 +97,7 @@ class CommentDetailTests(APITestCase):
         """
         response = self.client.get(f'/comments/{self.comment.id}/')
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_comment_updates(self):
         """
@@ -111,7 +115,7 @@ class CommentDetailTests(APITestCase):
 
         self.comment.refresh_from_db()
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.comment.content, 'Test comment updates')
 
     def test_delete_comment_authentcated_user_comment_owner(self):
@@ -121,7 +125,7 @@ class CommentDetailTests(APITestCase):
         """
         response = self.client.delete(f'/comments/{self.comment.id}/')
 
-        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_delete_comment_authenticated_user_not_owner(self):
         """
@@ -135,7 +139,7 @@ class CommentDetailTests(APITestCase):
 
         response = self.client.delete(f'/comments/{self.comment.id}/')
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_delete_comment_unauthentcated_user(self):
         """
@@ -146,4 +150,4 @@ class CommentDetailTests(APITestCase):
 
         response = self.client.delete(f'/comments/{self.comment.id}/')
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

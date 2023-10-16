@@ -41,7 +41,6 @@ class ProfileModelTests(TestCase):
         self.user.profile.employer = company
         self.user.profile.save()
 
-        # Verify the relationship between the profile.employer and the company
         self.assertEqual(self.user.profile.employer, company)
-        # Verify the reverse relationship using 'current_employee'
+        # Reverse relationship using 'current_employee'
         self.assertEqual(company.current_employee.first(), self.user.profile)
