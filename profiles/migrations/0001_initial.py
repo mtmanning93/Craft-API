@@ -17,14 +17,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Profile',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True,
+                    serialize=False, verbose_name='ID')),
                 ('name', models.CharField(blank=True, max_length=255)),
                 ('bio', models.TextField(blank=True)),
                 ('job', models.CharField(blank=True, max_length=100)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('updated_on', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(default='../user_defualt_icon_d7nivg.png', upload_to='images/')),
-                ('owner', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('image', models.ImageField(
+                    default='../user_defualt_icon_d7nivg.png',
+                    upload_to='images/')),
+                ('owner', models.OneToOneField(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created_on'],

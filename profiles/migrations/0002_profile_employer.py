@@ -15,6 +15,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='profile',
             name='employer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='current_employee', to='companies.company'),
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name='current_employee',
+                to='companies.company'),
         ),
     ]

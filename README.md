@@ -5,7 +5,7 @@
 - [Testing](#testing)
     - [Automated Testing](#automated-testing)
     - [Coverage](#coverage)
-    - [Linters](#linters)
+    - [Python Linter](#python-linter)
 - [References](#references)
 
 ## Testing
@@ -54,7 +54,7 @@ To run `coverage` for each app, type in command line:
 ![Profiles report](README_images/profiles_cov.png)
 </details>
 
-#### Linters
+#### Python Linter
 
 To check for syntax errors in the project's Python code I used `pycodestyle` *(formerly pep8)*. Using this I was able to test my code from inside the command line. Its a fast and easy way to heck the syntax as it returns the file name and lines of the error.
 
@@ -64,7 +64,7 @@ To install `pycodestyle` in the command line:
 
 Then to test the files in the command line:
 
-    pycodestyle python_file.py
+    pycodestyle <file_name>
     or
     pycodestyle .
 
@@ -72,8 +72,7 @@ When initially running the linter there were a few errors which I addressed and 
 
 To check I ran the following in the command line:
 
-    pycodestyle reports
-    pycodestyle reach
+    pycodestyle <app_name> *(all apps)*
     pycodestyle . (only errors shown in .vscode files)
 
 [⏫ contents](#contents)

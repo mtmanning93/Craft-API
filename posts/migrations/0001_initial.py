@@ -17,13 +17,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Post',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True, primary_key=True,
+                    serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255)),
                 ('content', models.TextField(blank=True)),
                 ('created_on', models.DateTimeField(auto_now_add=True)),
                 ('updated_on', models.DateTimeField(auto_now=True)),
-                ('image', models.ImageField(blank=True, default='../logo_nobg_aac6d9.png', upload_to='images/')),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('image', models.ImageField(
+                    blank=True, default='../logo_nobg_aac6d9.png',
+                    upload_to='images/')),
+                ('owner', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['-created_on'],
