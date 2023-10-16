@@ -1,5 +1,7 @@
 # Craft API
 
+A social media backend designed and created specifically for the Craft social media application.
+
 ## Contents
 
 - [Testing](#testing)
@@ -53,6 +55,8 @@ To run `coverage` for each app, type in command line:
 ![Posts report](README_images/posts_cov.png)
 ![Profiles report](README_images/profiles_cov.png)
 </details>
+
+[⏫ contents](#contents)
 
 #### Python Linter
 
