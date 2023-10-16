@@ -1,7 +1,6 @@
 from rest_framework.test import APITestCase, APIClient
 from django.contrib.auth.models import User
 from rest_framework import status
-from django.urls import reverse
 from ..models import Post
 from ..serializers import PostSerializer
 
@@ -30,16 +29,16 @@ class PostListViewTest(APITestCase):
             'title': 'Test Post 2',
             'content': 'I love testing'}
 
+        self.client = APIClient()
+        self.response = self.client.get('/posts/')
+        self.client.force_authenticate(user=self.user)
+
     def test_list_posts(self):
         """
         Test PostList view simple returns a successful response.
         Test created Post instance appear in the list.
         """
-        url = reverse('post-list')
-        client = APIClient()
-        response = client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.response.status_code, status.HTTP_200_OK)
         self.assertEqual(Post.objects.count(), 1)
 
     def test_create_post(self):
@@ -49,11 +48,7 @@ class PostListViewTest(APITestCase):
         Checks for a successful status code and that the posts count
         has been incremented.
         """
-        url = reverse('post-list')
-        client = APIClient()
-
-        client.force_authenticate(user=self.user)
-        response = client.post(url, self.post_data, format='json')
+        response = self.client.post('/posts/', self.post_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Post.objects.count(), 2)
@@ -78,15 +73,15 @@ class PostDetailViewTest(APITestCase):
             content='This is a test post'
             )
 
+        self.client = APIClient()
+        self.response = self.client.get('/posts/')
+        self.client.force_authenticate(user=self.user)
+
     def test_retrieve_post(self):
         """
         Checks the retrieval of a specific post instance is successful.
         """
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        client = APIClient()
-        response = client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.response.status_code, status.HTTP_200_OK)
 
     def test_update_post(self):
         """
@@ -101,16 +96,9 @@ class PostDetailViewTest(APITestCase):
             'content': 'This post has been updated'
             }
 
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        client = APIClient()
-
-        client.force_authenticate(user=self.user)
-
-        response = client.put(
-            url,
-            update_data,
-            format='json'
-            )
+        response = self.client.put(
+            f'/posts/{self.post.pk}/', update_data, format='json'
+        )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.post.refresh_from_db()
@@ -120,11 +108,7 @@ class PostDetailViewTest(APITestCase):
         """
         Tests to see if an authenticated user can also delete a post.
         """
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        client = APIClient()
-
-        client.force_authenticate(user=self.user)
-        response = client.delete(url)
+        response = self.client.delete(f'/posts/{self.post.pk}/')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Post.objects.count(), 0)
+        self.assertEqual(Post.objects.filter(pk=self.post.pk).count(), 0)

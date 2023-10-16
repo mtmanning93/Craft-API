@@ -1,7 +1,6 @@
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
-from django.urls import reverse
 from django.core.files import File
 from django.contrib.auth.models import User
 from ..models import Post
@@ -22,12 +21,17 @@ class PostSerializerTests(APITestCase):
             username='testuser',
             password='testpassword'
             )
+
         self.post = Post.objects.create(
             owner=self.user,
             title='Test Post',
             content='This is a test post'
         )
+
         self.serializer = PostSerializer()
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+        self.response = self.client.get(f'/posts/{self.post.pk}/')
 
     def test_post_owner_field_when_user_owns_post(self):
         """
@@ -36,14 +40,10 @@ class PostSerializerTests(APITestCase):
         serializer to check the value of the 'owner' field in the response
         data.
         """
-        client = APIClient()
-        client.force_authenticate(user=self.user)
+        self.assertEqual(self.response.status_code, status.HTTP_200_OK)
 
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        response = client.get(url)
+        data = self.response.data
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = response.data
         self.assertIn('owner', data)
         self.assertEqual(data['owner'], 'testuser')
 
@@ -53,15 +53,10 @@ class PostSerializerTests(APITestCase):
         logged in user also owns the post. First Checking the successful
         response and then the is_owner field.
         """
-        self.client.force_authenticate(user=self.user)
+        self.assertEqual(self.response.status_code, status.HTTP_200_OK)
 
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
+        data = self.response.data
 
-        response = self.client.get(url)
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = response.data
         self.assertIn('is_owner', data)
         self.assertTrue(data['is_owner'])
 
@@ -70,31 +65,24 @@ class PostSerializerTests(APITestCase):
         Checks the like_id field returns the Like objects id, if
         the current logged in user has liked the post object instance.
         """
-        self.client.force_authenticate(user=self.user)
-
         like = Like.objects.create(owner=self.user, post=self.post)
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
 
-        response = self.client.get(url)
+        response = self.client.get(f'/posts/{self.post.pk}/')
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        data = response.data
-        self.assertIn('like_id', data)
-        self.assertEqual(data['like_id'], like.id)
+        self.assertIn('like_id', response.data)
+        self.assertEqual(response.data['like_id'], like.id)
 
     def test_post_serializer_like_id_field_no_like(self):
         """
         Tests if the like_id field is serialized to 'None' if there is
         no like associated with the post from the currently logged in user.
         """
-        self.client.force_authenticate(user=self.user)
+        self.assertEqual(self.response.status_code, status.HTTP_200_OK)
 
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        response = self.client.get(url)
+        data = self.response.data
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = response.data
         self.assertIn('like_id', data)
         self.assertIsNone(data['like_id'])
 
@@ -103,9 +91,7 @@ class PostSerializerTests(APITestCase):
         Checks that the like_id field is serialized to 'None' if the user is
         not authenticated.
         """
-        url = reverse('post-detail', kwargs={'pk': self.post.pk})
-        response = self.client.get(url)
-        data = response.data
+        data = self.response.data
 
         self.assertIn('like_id', data)
         self.assertIsNone(data['like_id'])
