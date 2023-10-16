@@ -12,8 +12,7 @@ class ProfileListTest(APITestCase):
     Tests the retrieval of the Profiles list
     """
     def test_list_profiles(self):
-        url = reverse('profile-list')
-        response = self.client.get(url)
+        response = self.client.get('/profiles/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
@@ -30,14 +29,15 @@ class ProfileDetailTest(APITestCase):
             password="testpass"
         )
 
-    def test_retrieve_profiles(self):
-        """
-        Tests the retrieval of a single profile instance.
-        """
         self.client.login(
             username=self.user.username,
             password=self.user.password
         )
+
+    def test_retrieve_profiles(self):
+        """
+        Tests the retrieval of a single profile instance.
+        """
         url = reverse('profile-detail', args=[self.user.pk])
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -47,10 +47,6 @@ class ProfileDetailTest(APITestCase):
         Checks response status code.
         Checks response data is correct when retrieving a specific profile.
         """
-        self.client.login(
-            username=self.user.username,
-            password=self.user.password
-        )
         profile = Profile.objects.get(owner=self.user)
         url = reverse('profile-detail', args=[profile.pk])
         profile.job = "Crafter"
@@ -71,7 +67,8 @@ class ProfileDetailTest(APITestCase):
             - bio
         """
         self.client.login(
-            username=self.user.username, password='testpass')
+            username=self.user.username, password='testpass'
+        )
 
         profile = Profile.objects.get(owner=self.user)
         url = reverse('profile-detail', args=[profile.pk])
