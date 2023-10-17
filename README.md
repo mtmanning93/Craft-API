@@ -1,14 +1,82 @@
 # Craft API
 
-A social media backend designed and created specifically for the Craft social media application.
+## Intro
+
+A social media backend designed and created with the Craft social media application in mind. The API supports user authentication and authorization, allowing users to register, login and logout. It handles the interactive CRUD operations for various database models such as profiles, posts, companies, likes, followers, comments, and approvals. All data passed through the API is validated, having various permissions and restrictions enforced based upon the users role and relationship.
+
+The Craft API serves the following functions:
+
+- Support user authenticatation and authorization.
+- Content management through the use of CRUD operations.
+    - Create: Authenticated users can create, profile, post, like, approvals, follower, comment, company instances.
+    - Read: All users have the ability to view a list of the model instances.
+    - Update: Authenticated users can update objects they own, through the use of permissions.
+    - Delete: Authenticated users can delete objects they own, through the use of permissions.
+- Ensures valid data is passed through the use of data validation and Error Handling.
+- Allows role based access via permissions and restrictions.
+- Allow cross model interactions such as, liking a post, approving a profile, following a profile, and leaving a comment on a post.
+
+### Live Site
+
+[Hosted on Heroku](https://craft-api-aeec93e46ff2.herokuapp.com/)
+
+### Repository
+
+[Github Repository](https://github.com/mtmanning93/craft-api)
+
+### Project Stack
+
+    Python, Django Rest Framework, Cloudinary, JSON Web Tokens, ElephantSQL with PostgreSQL, Heroku.
 
 ## Contents
 
+- [Intro](#intro)
+    - [Live Site](#live-site)
+    - [Repository](#repository)
+    - [Project Stack](#project-stack)
+- [Planning](#planning)
+    - [Database ERD](#database-erd)
+        - [Database Models](#database-models)
+            - [User](#user)
+            - [Profile](#profile)
+            - [Company](#company)
+            - [Post](#post)
+            - [Approval](#approval)
+            - [Comment](#comment)
+            - [Follower](#follower)
+            - [Likes](#likes)
 - [Testing](#testing)
     - [Automated Testing](#automated-testing)
     - [Coverage](#coverage)
+    - [Manual Testing](#manual-testing)
     - [Python Linter](#python-linter)
-- [References](#references)
+- [Credits](#credits)
+
+## Planning
+
+### Database ERD
+
+To create the database structure I first designed an entity relationship diagram, mapping out all models and relationships. This gave a clear visual representation of the database structure I would need. By planning I was able to refer to the ERD when building the apps and models. Understanding the relationships between them also allowed for better understanding when implementing logic in the views and erializers. Below the diagram image is a further explanaitio of the models.
+
+![Craft Api ERD](README_images/api_erd.png)
+
+#### Database Models
+
+##### User
+
+##### Profile
+
+##### Company
+
+##### Post
+
+##### Approval
+
+##### Comment
+
+##### Follower
+
+##### Likes
 
 ## Testing
 
@@ -58,7 +126,9 @@ To run `coverage` for each app, type in command line:
 
 [⏫ contents](#contents)
 
-#### Python Linter
+### Manual Testing
+
+### Python Linter
 
 To check for syntax errors in the project's Python code I used `pycodestyle` *(formerly pep8)*. Using this I was able to test my code from inside the command line. Its a fast and easy way to heck the syntax as it returns the file name and lines of the error.
 
@@ -81,7 +151,13 @@ To check I ran the following in the command line:
 
 [⏫ contents](#contents)
 
-## References
+## Credits
+
+### Outside Services
+
+These are other applications and services used to enable the api build. Including planning and deployment.
+
+ER Diagram - [Lucid Chart](https://www.lucidchart.com)
 
 ### Overal api structure, setup(settings), JWT.
 
