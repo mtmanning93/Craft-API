@@ -28,12 +28,19 @@ The Craft API serves the following functions:
 
     Python, Django Rest Framework, Cloudinary, JSON Web Tokens, ElephantSQL with PostgreSQL, Heroku.
 
+### Get Started
+
+To get started follow these steps to clone the github repository locally, and setup other dependencies: 
+
+[Deployement. *(Github cloning, Cloudinary and ElephantSQL setup, Heroku Deployment)*](#deployment)
+
 ## Contents
 
 - [Intro](#intro)
     - [Live Site](#live-site)
     - [Repository](#repository)
     - [Project Stack](#project-stack)
+    - [Get Started](#get-started)
 - [Planning](#planning)
     - [Database ERD](#database-erd)
         - [Database Models](#database-models)
@@ -47,6 +54,8 @@ The Craft API serves the following functions:
             - [Likes](#likes)
 - [Development]()
     Use of issues, milestones and backend label in Craft Kanban
+- [Capabilites]()
+    Explain the most important logical views and relationship Example: liking a post, approving a profile etc.
 - [Technologies]()
     - [DRF]()
     - [Cloudinary]()
@@ -54,9 +63,9 @@ The Craft API serves the following functions:
     - [ElephantSQL]()
 - [Bugs]()
 - [Deployment]()
-    - [Github Cloning]()
-    - [Cloudinary]()
-    - [ElephantSQL]()
+    - [Github Cloning](#github-cloning)
+    - [Cloudinary](#cloudinary-deployment)
+    - [ElephantSQL](#elephantsql-deployment)
     - [Heroku]()
 - [Testing](#testing)
     - [Automated Testing](#automated-testing)
@@ -92,6 +101,185 @@ To create the database structure I first designed an entity relationship diagram
 ##### Likes
 
 [⏫ contents](#contents)
+
+## Deployment
+
+### Github Cloning
+-------------------------
+
+To clone the api from its [GitHub repository](https://github.com/mtmanning93/craft-api), follow the steps below:
+a
+**1. Navigate to the Reach-reports repository, and click the green 'code' button.**
+
+![Clone button in repo](README_images/deployment/clone.png)
+
+**2. Once clicked, within the dropdown, copy the clone URL.**
+
+![Clone url](README_images/deployment/clone_url.png)
+
+**3. In your local IDE open your Git terminal**
+
+**4. Change your working directory to your preferred location.**
+
+**5. Next type the following command, the 'copied URL' is the URL taken form the Github repo.**
+
+    git clone https://github.com/mtmanning93/craft-api
+
+**6. Hit Enter to create the cloned repository.**
+
+**7. Create an `env.py` file. Here will be where you hold the api's environment variables, in order to run the api successfully you will require the following variables.**
+
+    import os
+
+    os.environ.setdefault("SECRET_KEY", "a secret key of your choice")
+    os.environ['DEV'] = "a 'truthy' value"
+    os.environ['CLOUDINARY_URL'] = "get from Cloudinary dashboard"
+    os.environ['DATABASE_URL'] = "get from SQL provider (ElephantSQL)"
+
+In order to find the above variables you can follow the steps below to set up:
+- [Elephant SQL](#elephantsql-deployment)
+- [Cloudinary](#cloudinary-deployment)
+
+**8. IMPORTANT! Ensure the env.py file is listed in your .gitignore file to prevent any private information from being public.**
+
+    core.Microsoft*
+    core.mongo*
+    core.python*
+    **env.py**
+    __pycache__/
+    *.py[cod]
+    node_modules/
+    .github/
+    cloudinary_python.txt
+
+**9. Install all requirements using the following terminal command.**
+
+    pip3 install requirements.txt
+
+**10. Next, to perform database migrations, you can use the following command.**
+
+    python manage.py migrate
+
+**11. Create a new Django superuser. Type the command below and follow the in-terminal prompts to set up.**
+
+    python manage.py createsuperuser
+
+**12. Lastly, run the app using the below command.**
+
+    python manage.py runserver
+
+[⏫ contents](#contents)
+
+### Cloudinary Deployment
+-------------------------
+
+Cloudinary was used in the project to store all media files, including defaults. Click the link to navigate to the [Cloudinary website](https://cloudinary.com/). To setup Cloudinary follow the simple steps below:
+
+**1. Navigate to the Cloudinary website and register or login.**
+
+![Cloudinary landing page](README_images/deployment/cloudinary_site.png)
+
+**2. Once the login or registration is complete, navigate to the 'Dashboard' page.**
+
+![Dashboard button](README_images/deployment/cloudinary_dash.png)
+
+**3. After reaching the dashboard you will find all relevant credentials needed to set up a project with your cloudinary.**
+
+![Cloudinary credentials](README_images/deployment/cloudinary_creds.png)
+
+[⏫ contents](#contents)
+
+### ElephantSQL Deployment
+-------------------------
+
+The api uses ElephantSQL as the database hosting service with PostgreSQL. Click the link to navigate to the [ElephantSQL site](https://customer.elephantsql.com/). In order to set up ElephantSQL follow these steps:
+
+**1. Create an account or log in to your ElephantSQL dashboard and click the green 'Create New Instance' Button.**
+
+![ElephantSQL dashboard](README_images/deployment/elephant_sql_dash.png)
+
+**2. Next setup the instance plan, when the form is complete click 'Select Region'.**
+
+Generally, the title here is the project title. For the api, the 'Tiny Turtle (Free)' plan was selected and the tags field left blank.
+
+![ElephantSQL plan setup](README_images/deployment/elephant_setup.png)
+
+**3. Select the data center closest to you from the dropdown list, when selected click 'Review'.**
+
+![Select region](README_images/deployment/elephant_region.png)
+
+**4. Check the details are correct and click the green 'Create Instance' button.**
+
+![Review details](README_images/deployment/elephant_review.png)
+
+**5. Return to the dashboard and select the new instance just created by clicking on its name.**
+
+![Select new instance](README_images/deployment/elephant_select_instance.png)
+
+**6. This will display all the necessary credentials to connect this project to your database.**
+
+![Instance details](README_images/deployment/elephant_details.png)
+
+[⏫ contents](#contents)
+
+### Heroku Deployment
+-------------------------
+
+The project was deployed using Heroku. Heroku simplifies the deployment process. With a few commands, you can deploy your application without the need to configure servers, networking, or infrastructure. I chose to deploy my project early on to avoid any nasty surprises at the end of the build, this is a great method and reduces stress as the project is already deployed throughout.
+
+In order to deploy my project to Heroku I followed these 10 steps:
+
+**1. Navigate to the Heroku dashboard. Click "New" and select "Create new app".**
+
+![Create new app](README_images/deployment/heroku_new.png)
+
+**2. Create an app name and select a region closest to you.**
+
+![Giving the app a name](README_images/deployment/app_name.png)
+
+**3. Next, navigate to the 'Settings' tab, and select 'Reveal Config Vars'.**
+
+![Settings tab](README_images/deployment/settings.png)
+![Config Vars](README_images/deployment/reveal.png)
+
+**4. Add necessary 'Config Vars'.**
+
+For this project, you will need the following 'Config Vars':
+
+- CLOUDINARY_URL: Get from Cloudinary.
+- DATABASE_URL: Get from your SQL provider.
+- EMAIL_HOST: Get from your email provider.
+- GMAIL_ACC: Get from your email provider.
+- GMAIL_KEY: Get from your email provider.
+- PORT: Set to 8000.
+- SECRET_KEY: Django project secret key, generated by your Django project.
+- DISABLE_COLLECTSTATIC: Set to 0.
+
+![Project necessary Config Vars](README_images/deployment/config_vars.png)
+
+**5. Navigate to the 'Deploy' tab.**
+
+![Deploy tab](README_images/deployment/deploy.png)
+
+**6. Scroll to the 'Deployment Methods' section and select 'Connect to GitHub'.**
+
+![Step one connect to GitHub](README_images/deployment/github_connect.png)
+
+**7. Once connected to GitHub, search for the repository in the 'Connect to GitHub' section, and click 'Connect'.**
+
+![Step two connect to Github](README_images/deployment/repo_connect.png)
+
+**8. I chose to enable 'Automatic Deploys'. In order to do so click the 'Enable Automatic Deploys' button.**
+
+![Enable automatic deploys](README_images/deployment/auto_deploy.png)
+
+**9. For manual deployment or to deploy when needed use the 'Manual Deploy' section by clicking 'Deploy Branch'.**
+
+![Manual deploys](README_images/deployment/manual_deploys.png)
+
+**10. Click 'View' at the bottom of the 'Manual Deploy' section to view the deployed site.**
+
+![View deployed site button](README_images/deployment/view_site.png)
 
 ## Testing
 
@@ -131,14 +319,14 @@ To run `coverage` for each app, type in command line:
 <details>
 <summary>Coverage Reports Screenshots</summary>
 
-![Approvals report](README_images/approvals_cov.png)
-![Comments report](README_images/comments_cov.png)
-![Companies report](README_images/companies_cov.png)
-![Craft_api 90% report](README_images/craft_api_cov.png)
-![Followers report](README_images/followers_cov.png)
-![Likes report](README_images/likes_cov.png)
-![Posts report](README_images/posts_cov.png)
-![Profiles report](README_images/profiles_cov.png)
+![Approvals report](README_images/testing/approvals_cov.png)
+![Comments report](README_images/testing/comments_cov.png)
+![Companies report](README_images/testing/companies_cov.png)
+![Craft_api 90% report](README_images/testing/craft_api_cov.png)
+![Followers report](README_images/testing/followers_cov.png)
+![Likes report](README_images/testing/likes_cov.png)
+![Posts report](README_images/testing/posts_cov.png)
+![Profiles report](README_images/testing/profiles_cov.png)
 </details>
 
 [⏫ contents](#contents)
