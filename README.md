@@ -45,6 +45,19 @@ The Craft API serves the following functions:
             - [Comment](#comment)
             - [Follower](#follower)
             - [Likes](#likes)
+- [Development]()
+    Use of issues, milestones and backend label in Craft Kanban
+- [Technologies]()
+    - [DRF]()
+    - [Cloudinary]()
+    - [JWT]()
+    - [ElephantSQL]()
+- [Bugs]()
+- [Deployment]()
+    - [Github Cloning]()
+    - [Cloudinary]()
+    - [ElephantSQL]()
+    - [Heroku]()
 - [Testing](#testing)
     - [Automated Testing](#automated-testing)
     - [Coverage](#coverage)
@@ -78,6 +91,8 @@ To create the database structure I first designed an entity relationship diagram
 
 ##### Likes
 
+[⏫ contents](#contents)
+
 ## Testing
 
 ### Automated Testing
@@ -87,6 +102,8 @@ To test test the overall functionality of the craft_api project and its containi
 Initially when building the testcases I had to learn the difference bewteen TestCase and APITestCase, however after reading the necessary documents it was clear that APITestCase would be useful for testing api endpoints therefore it was used for testiing views, serializers and permissions. TestCase was useful for testing the models as this doesnt rewuire the same functionality in the tests.
 
 *Some resources I used to build knowledge and write tests: [Testing references](#testing-using-apitestcase-apiclient)*
+
+[⏫ contents](#contents)
 
 ### Coverage
 
@@ -128,6 +145,8 @@ To run `coverage` for each app, type in command line:
 
 ### Manual Testing
 
+[⏫ contents](#contents)
+
 ### Python Linter
 
 To check for syntax errors in the project's Python code I used `pycodestyle` *(formerly pep8)*. Using this I was able to test my code from inside the command line. Its a fast and easy way to heck the syntax as it returns the file name and lines of the error.
@@ -153,9 +172,9 @@ To check I ran the following in the command line:
 
 ## Credits
 
-### Outside Services
+### Tools
 
-These are other applications and services used to enable the api build. Including planning and deployment.
+These are other applications and services used to enable the development process. Including planning and deployment.
 
 ER Diagram - [Lucid Chart](https://www.lucidchart.com)
 
