@@ -86,9 +86,31 @@ To create the database structure I first designed an entity relationship diagram
 
 ##### User
 
+Each user instance is created on registration, when the user will provide a username and password. The registration of a user will automatically create a profile instance with the `create_profile` method (*profiles/models.py*). The profile's owner then becomes the user instance created on registration. 
+
+The User model has a OneToOne relationship via the Profile.owner field with the Profile model.
+
+The user is also related via a ForeginKey field with all other models in the database, usually via the model objects owner field.
+
 ##### Profile
 
+A Profile object as discussed above is created when a user registers on the site. Each profile object holds information regarding the user. These fields include:
+
+- **owner:** related via a OneToOne Field with the User model
+- **name, bio, job:** these fields are optional additions for a user to enhance their own profile information
+- **employer:** related via ForeignKey field with the Company model, its also an optional field where a 
+user can add a Company instance as an employer to their profile. The `related_name` attribute is set to 'current_employee' this is for use when searching for employee count inside the Company object.
+- **created_on, updated_on:** add a related date and time to the relevant field.
+- **image:** the profile image is stored in this field using [Cloudinary](#cloudinary-deployment) for file storage.
+
 ##### Company
+
+A user has the possibility to create a Company object, on creation of a company the user becomes the company owner. Each user can create a maximum of three companies, and a company with the same name and location can not be created, thiys allows for franchises in different locations to be added. These are validated in the `validate_company` method (*companies/views.py*). Other fields include:
+
+- **name:** the company title must be included when creating a company.
+- **owner:** related to the company create via a ForeignKey field to the User.
+- **location, type:** optional fields where a user can enhance their companies information.
+- **created_on:** add a related date and time.
 
 ##### Post
 
