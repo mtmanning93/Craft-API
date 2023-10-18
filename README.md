@@ -43,15 +43,15 @@ To get started follow these steps to clone the github repository locally, and se
     - [Get Started](#get-started)
 - [Planning](#planning)
     - [Database ERD](#database-erd)
-        - [Database Models](#database-models)
-            - [User](#user)
-            - [Profile](#profile)
-            - [Company](#company)
-            - [Post](#post)
-            - [Approval](#approval)
-            - [Comment](#comment)
-            - [Follower](#follower)
-            - [Likes](#likes)
+    - [Database Models](#database-models)
+        - [User](#user)
+        - [Profile](#profile)
+        - [Company](#company)
+        - [Post](#post)
+        - [Likes](#likes)
+        - [Comment](#comment)
+        - [Approval](#approval)
+        - [Follower](#follower)
 - [Development]()
     Use of issues, milestones and backend label in Craft Kanban
 - [Capabilites]()
@@ -80,11 +80,12 @@ To get started follow these steps to clone the github repository locally, and se
 
 To create the database structure I first designed an entity relationship diagram, mapping out all models and relationships. This gave a clear visual representation of the database structure I would need. By planning I was able to refer to the ERD when building the apps and models. Understanding the relationships between them also allowed for better understanding when implementing logic in the views and erializers. Below the diagram image is a further explanaitio of the models.
 
-![Craft Api ERD](README_images/api_erd.png)
+![Craft Api ERD](README_images/erd.png)
 
-#### Database Models
+### Database Models
 
-##### User
+#### User
+-------------
 
 Each user instance is created on registration, when the user will provide a username and password. The registration of a user will automatically create a profile instance with the `create_profile` method (*profiles/models.py*). The profile's owner then becomes the user instance created on registration. 
 
@@ -92,7 +93,8 @@ The User model has a OneToOne relationship via the Profile.owner field with the 
 
 The user is also related via a ForeginKey field with all other models in the database, usually via the model objects owner field.
 
-##### Profile
+#### Profile
+-------------
 
 A Profile object as discussed above is created when a user registers on the site. Each profile object holds information regarding the user. These fields include:
 
@@ -103,7 +105,8 @@ user can add a Company instance as an employer to their profile. The `related_na
 - **created_on, updated_on:** add a related date and time to the relevant field.
 - **image:** the profile image is stored in this field using [Cloudinary](#cloudinary-deployment) for file storage.
 
-##### Company
+#### Company
+-------------
 
 A user has the possibility to create a Company object, on creation of a company the user becomes the company owner. Each user can create a maximum of three companies, and a company with the same name and location can not be created, thiys allows for franchises in different locations to be added. These are validated in the `validate_company` method (*companies/views.py*). Other fields include:
 
@@ -112,15 +115,53 @@ A user has the possibility to create a Company object, on creation of a company 
 - **location, type:** optional fields where a user can enhance their companies information.
 - **created_on:** add a related date and time.
 
-##### Post
+#### Post
+-------------
 
-##### Approval
+A post oject is the main object a user can create. The Profile model has a OneToMany relationship with the Post model. When a post is created the `owner` field is populated with the User via ForeignKey field. When a post is created a title must be provided as a minimum. If a user chooses to add an image this is also validated first in the `validate_image` method (*posts/serializers.py*) The model fields also include:
 
-##### Comment
+- **owner:** populated by the user instance.
+- **title:** a minimum requirement for a post instance, maximum length is set to limit the character length.
+- **content:** an optional TextField for a user to write a caption related to the posts image or title.
+- **created_on, updated_on:** add a related date and time, as a user can update a posts content an updated on field is populated.
+- **image:** the optional post image is stored in this field using [Cloudinary](#cloudinary-deployment) for file storage.
 
-##### Follower
+#### Like
+-------------
 
-##### Likes
+The like model is related to the user and post model both via a ForeignKey as a user and post can have many likes associated. A user must select a post to like, in order to post and create a like instance. Of course a post can a have multiple likes associated with its instance however there is a `unique_together` limiter on the likes model. This means a user can only like a particular post once, if this is attempted an error is raised. Field structure of the like model, is as follows:
+
+- **owner:** ForeignKey field related to the User model, automatically populated on creation.
+- **post:** ForeignKey field related to the Post model.
+- **created_on:** add the date and time a the point of creation.
+
+#### Comment
+-------------
+
+Similar to the like model the comment model is related the post and user models via a Forignkey field. A post and user can have many comments therefore the relationship is OneToMany. A comment is always connected to a post instance, therfore its possible to list all comments related to a specific post. Each comment is updatebale by the owner so an `updated_on` field is necessary. Other field explanations:
+
+- **owner:** ForeignKey field related to the User model, automatically populated on creation.
+- **post:** ForeignKey field related to the Post model, linking all comments to each post.
+- **created_on, updated_on:** add a related date and time, as a user can update a posts content an updated on field is populated.
+- **content:** the only required field is a TextField, here is where the users comment is stored.
+
+#### Approval
+-------------
+
+The approval model shares a very similar structure to the like model. Its use is best explained as a way to like a profile instead of a post. The approval model will be used to store profile approvals, for instance a user can approve another profile, similar to liking a post. It has ManyToOne relationships with both the profile and user models. A `unique_together` constraint is also added to ensure a user can only approve a profile once. In the profile/serializers.py an `approved_count` field is added, to count the number of approvals associated with each profile. The model is structured as folows:
+
+- **owner:** ForeignKey field related to the User model, automatically populated on creation.
+- **profile:** ForeignKey field related to the Profile model, the profile is the 'approved' object.
+- **created_on:** add the date and time a the point of creation.
+
+#### Follower
+-------------
+
+Lastly is the Follower model. The owner field is populated by the User via a ForeignKey field. This means they are the 'follower'. The followed field is the User instance they are following. Both of these fields have `related_name` attributes, this is so it is possible to update both profiles involved in a follower object creation, and access the data from elsewhere in the database. The follower cannot be updated only deleted so there is no need for an updated_on field. The structure can be seen below:
+
+- **owner:** ForeignKey field related to the User model, automatically populated on creation. The related_name attribute here is 'following'.
+- **followed:** this field is related to the User who is being followed. The related_name attribute here is 'followed'. 
+- **created_on:** add the date and time a the point of creation.
 
 [⏫ contents](#contents)
 
