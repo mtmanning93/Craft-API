@@ -55,12 +55,12 @@ To get started follow these steps to clone the github repository locally, and se
 - [Development]()
     Use of issues, milestones and backend label in Craft Kanban
 - [Capabilites]()
-    Explain the most important logical views and relationship Example: liking a post, approving a profile etc.
+    Explain the most important logical views and relationship Example: liking a post, approving a profile etc. serializers extra fields
 - [Technologies]()
-    - [DRF]()
-    - [Cloudinary]()
-    - [JWT]()
-    - [ElephantSQL]()
+    - [Django-Rest-Framework](#django-rest-framework-drf)
+    - [Cloudinary](#cloudinary)
+    - [ElephantSQL](#elephantsql)
+    - [JWT](#json-web-tokens-jwt)
 - [Bugs]()
 - [Deployment]()
     - [Github Cloning](#github-cloning)
@@ -162,6 +162,40 @@ Lastly is the Follower model. The owner field is populated by the User via a For
 - **owner:** ForeignKey field related to the User model, automatically populated on creation. The related_name attribute here is 'following'.
 - **followed:** this field is related to the User who is being followed. The related_name attribute here is 'followed'. 
 - **created_on:** add the date and time a the point of creation.
+
+[⏫ contents](#contents)
+
+## Technologies
+
+### Django-Rest-Framework (DRF)
+
+DRF is defined in its documentation as a powerful and flexible toolkit for building Web APIs. Using a Restful API has many advantages in the build, including simplicity, statelessness and security. DRF uses standard HTTP methods like, GET, POST, PUT, DELETE and status codes which are easy to understand and clear to work with. REST (Representational State Transfer) is stateless, this means the connection between server and client is simplified, as all information required to make a request must be sent from the client. Also a DRF api can be secured using standard authentication and authorization methods, such as OAuth and [JWT](#json-web-tokens). Another great advantage to DRF is the documentation, and libraries available to the developer. Making building an api efficient in comparison.
+
+For this build the serialization of the data was extremely useful, it easily allows the conversion of data types, like models into pure JSON or other types if needed. The built in generic views keeps code simple and less verbose, enabling multiple functionalities from one simple line. In the following example it's possible to carry out RUD (Retrieve, Update, Destroy) operations, writing views such as:
+
+    `class PostDetail(generics.RetrieveUpdateDestroyAPIView):`
+
+Finally the documentation provided but such a framework is immensly helpful, allowing for fast solutions to problems along the way. For this particular build the DRF testing docs were used time and time again to clarify testing situations. 
+
+To read more regarding the Django-Rest-Framework and get started, follow this link: [Django-Rest-Framework](https://www.django-rest-framework.org/#installation)
+
+### Cloudinary
+
+Cloudinary is a cloud-based media management platform. As the apis initial purpose is to support the craft social media app, it was clear that media management would be necessary, due to the uploading of images for posts and profile images. Cloudinary is efficient in handling media data and helps to enhance the api's performance. Cloudinary is very simple to setup ([Cloudinary Setup](#cloudinary-deployment)) and has extensive documentation, again making the development process even more efficient. The api alone doesn't need to store many media files in order to function, however it does use some default images for use when a user registers, creating a profile or a post without an image uploaded.
+
+### ElephantSQL
+
+ElephantSQL is a cloud-based database service that manages PostgreSQL databases. It simplifies database management, taking care of time consuming jobs such as, database setup, maintenance. This again allows for an efficient development process. ElephantSWL is fast and easy to setup and integrate into a django project. The site is simple, user friendly and the documentation is again extensive, offering the necessary suppport. To get setup head to the [ElephantSQL Deployment](#elephantsql-deployment) section.
+
+### JSON Web Tokens (JWT)
+
+JWTs were used in development of the API for security reasons. JWTs enhance an apllications security, they do this by creating a JWT when a user authenticates or logs in. The site can then check the JWT (Payload) to prove the user is who they are, and check to ensure the JWT (Signature) is not fake or been tampered with. Essentially it allows the site to trust the user. A JWT can also expire, which further enhances security. Once the token expires, the client must re-authenticate or login to obtain a new token, reducing the risk of unauthorized access in case a token has been altered.
+
+In summary, JWTs are a great tool for managing authentication and authorization in the API. It has great documentation and is relatively simple to follow. To find out more here follow this link [JSON Web Tokens](https://jwt.io/).
+
+[⏫ contents](#contents)
+
+## Bugs
 
 [⏫ contents](#contents)
 
