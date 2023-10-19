@@ -60,8 +60,9 @@ To get started follow these steps to clone the github repository locally, and se
     - [Django-Rest-Framework](#django-rest-framework-drf)
     - [Cloudinary](#cloudinary)
     - [ElephantSQL](#elephantsql)
-    - [JWT](#json-web-tokens-jwt)
+    - [JSON Web Tokens](#json-web-tokens-jwt)
 - [Bugs]()
+    Explain issues which arose during the build
 - [Deployment]()
     - [Github Cloning](#github-cloning)
     - [Cloudinary Deployment](#cloudinary-deployment)
@@ -164,6 +165,57 @@ Lastly is the Follower model. The owner field is populated by the User via a For
 - **created_on:** add the date and time a the point of creation.
 
 [⏫ contents](#contents)
+
+## API Development
+
+In order to aid in the development process of the API, I needed to use a method to map out some tasks, in order to achieve the complete functionality needed within the API. I used an agile approach. Creating a milestone for all backend components in the API. The issues added to this milestone were all given a backend label as some if not all of the issue tasks were related to the backend fucntionality. With this approach I was able to be productive during the development. If an issues tasks were comepletely finished I was able to close the related issue, however, some issues cover both back and frontend fucntionality. If this was the case the 'backend' label was removed from the issue. When each task was complete manual testing was carried out to ensure correct functionality, before checkng off the task and moving on to the next.
+
+The issues, milestones and kanban board were created inside the [Craft Social repository](https://github.com/mtmanning93/craft-front), the frontend which craft-api was initially created for. Once created the Kanban board (Github Project) was then linked to the craft-api repository.
+
+### Github Issues
+
+#### Templates
+
+To begin the development, I created three templates:
+
+- [User Story](https://github.com/mtmanning93/craft-front/blob/main/.github/ISSUE_TEMPLATE/craft-user-story.md)
+- [Bug Report](https://github.com/mtmanning93/craft-front/blob/main/.github/ISSUE_TEMPLATE/craft-bug-report.md)
+- [Feature Request](https://github.com/mtmanning93/craft-front/blob/main/.github/ISSUE_TEMPLATE/craft-feature-request-form.md)
+
+#### Backend Label
+
+Once the user stories were created for the [Craft Social poroject](https://github.com/mtmanning93/craft-front) labels were created in order to specify 'MoSCoW' principles and to seperate 'frontend' and 'backend' issues, or to specifiy the issue would cross both. For the API related issues the issues were labelled with the 'backend' label.
+
+![Backend label](README_images/backend_label.png)
+
+To see a full list of labels: [Link to labels](https://github.com/mtmanning93/craft-front/labels)
+
+#### Backend User Stories
+
+As explained before the user stories were created in the [craft-front repo](https://github.com/mtmanning93/craft-front). To aid in the API development a user story related to the backend was assigned the 'backend' label, or if a user story had a task relating to the backend. All user stories related to the backend were added to an iteration (Github Milestone) named ['Craft API Backend Setup'](https://github.com/mtmanning93/craft-front/milestone/2). This made the issues easily distinguishable. Within the iteration they were prioritised using the 'MoSCoW' principle. Finally the Kanban Board was used to visually represent the current tasks throughout the development process.
+
+[Backend Issues list](https://github.com/mtmanning93/craft-front/issues?q=is%3Aopen+is%3Aissue+label%3ABackend)
+
+[Example 'Backend' user story](https://github.com/users/mtmanning93/projects/8?pane=issue&itemId=40699437)
+
+### Backend Iteration
+
+To distinguish all related 'backend' tasks and user stories an iteration was created. In the iteration all user stories labelled with the 'backend' label were added and prioritized. If a user story was completed with all tasks checked and tested, it was closed. Otherwise if the user story contained a backend task which was completed the 'backend' label was removed from the user story, and then the user story removed from the iteration.
+
+['Craft API Backend Setup' iteration](https://github.com/mtmanning93/craft-front/milestone/2?closed=1)
+
+### Kanban Board
+
+To help with the visualization of tasks in the project I implemented a Kanban board, using GitHub projects. The board was seperated into 3 columns; To Do, In Progress, and Done. All issues in the backlog were automatically added to the Kanban 'To Do' column. Throughout the build, I would take all issues from the current iteration into the 'In Progress' column. Once all tasks were completed in the issue I would move the issue over to the 'Done' column. 
+
+When possible I would close an issue from the terminal using the `close #10` command from inside a commit message. This would automatically move the issue into the 'Done' column.
+
+[Reach Kanban Board](https://github.com/users/mtmanning93/projects/7)
+
+
+
+[⏫ contents](#contents)
+
 
 ## Technologies
 
