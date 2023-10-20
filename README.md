@@ -534,6 +534,8 @@ To include it in the API project, these steps were followed:
 
     python manage.py migrate
 
+For more information on how to setup a project using `dj-rest-auth` use the in the [Credits Section](#setupsettings-dj-rest-auth-and-jwt)
+
 [⏫ contents](#contents)
 
 ### JSON Web Tokens (JWT)
@@ -879,13 +881,15 @@ Image Resizing for Testing - [img2go](https://www.img2go.com/)
 
 -----------------------------------------------
 
-### Overal api structure, setup(settings), JWT.
+### Setup(settings), dj-rest-auth, and JWT.
 
 I took guidance from DRF API Walkthrough project on the CodeInstitute Advanced Front-End program. It aided me mostly in the setup phase, and particularly with the JWT setup. After completeing the walkthrough I had created an API which I was able to refer to.
 
 [JWT docs](https://jwt.io/introduction)
 
 [dj-res-auth docs](https://dj-rest-auth.readthedocs.io/en/latest/installation.html)
+
+[dj-rest-auth override user details serializer](https://dj-rest-auth.readthedocs.io/en/latest/faq.html)
 
 [My drf-API version](https://github.com/mtmanning93/drf-API)
 
