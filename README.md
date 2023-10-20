@@ -83,6 +83,7 @@ To get started follow these steps to clone the github repository locally, and se
     - [Django-Rest-Framework](#django-rest-framework-drf)
     - [Cloudinary](#cloudinary)
     - [ElephantSQL](#elephantsql)
+    - [dj-rest-auth](#dj-rest-auth)
     - [JSON Web Tokens](#json-web-tokens-jwt)
 - [Fixed Bugs](#fixed-bugs)
 - [Deployment](#deployment)
@@ -470,11 +471,114 @@ Cloudinary is a cloud-based media management platform. As the apis initial purpo
 
 ElephantSQL is a cloud-based database service that manages PostgreSQL databases. It simplifies database management, taking care of time consuming jobs such as, database setup, maintenance. This again allows for an efficient development process. ElephantSWL is fast and easy to setup and integrate into a django project. The site is simple, user friendly and the documentation is again extensive, offering the necessary suppport. To get setup head to the [ElephantSQL Deployment](#elephantsql-deployment) section.
 
+[⏫ contents](#contents)
+
+### dj-rest-auth
+
+Django REST Auth is a third-party package that provides authentication and registration endpoints for a DRF project. It makes the handling of user authentication and registration in Django applications very simple, and it supports the use of JWTs. Together with [JWTs](#json-web-tokens-jwt) it makes the API much more secure using very little additional code.
+
+When including `dj-rest-auth` in the project additional API endpoints were exposed, these are shown below:
+
+    dj-rest-auth/registration/
+    dj-rest-auth/login/
+    dj-rest-auth/logout/
+    dj-rest-auth/user/
+    dj-rest-auth/token/refresh/
+
+To include it in the API project, these steps were followed:
+
+#### 1. Install dj-rest-auth.
+
+*(Installs the most supported version, although newer versions are avaliable with the 'pip3 install dj-rest-auth' command)*
+
+    pip3 install dj-rest-auth==2.1.9
+
+#### 2. Add it to the installed apps in settings.py.
+
+    INSTALLED_APPS = [
+        ...
+        'rest_framework.authtoken',
+        'dj_rest_auth',
+        ...
+    ]
+
+#### 3. Add the dj-rest-auth urls to the main urls file.
+
+    path('dj-rest-auth/', include('dj_rest_auth.urls'))
+
+#### 4. To allow users to register install the following.
+
+    pip install 'dj-rest-auth[with_social]'
+
+#### 5. Update Installed apps.
+
+    INSTALLED_APPS = [
+        ...
+        'django.contrib.sites',
+        'allauth',
+        'allauth.account',
+        'allauth.socialaccount',
+        'dj_rest_auth.registration',
+        ...
+    ]
+
+#### 6. Declare SITE_ID in settings by adding the following variable.
+
+    SITE_ID = 1
+
+#### 7. Update main urls
+
+    path('dj-rest-auth/registration/', include('dj_rest_auth.registration.urls'))
+
+#### 8. Migrate the database.
+
+    python manage.py migrate
+
+[⏫ contents](#contents)
+
 ### JSON Web Tokens (JWT)
 
 JWTs were used in development of the API for security reasons. JWTs enhance an apllications security, they do this by creating a JWT when a user authenticates or logs in. The site can then check the JWT (Payload) to prove the user is who they are, and check to ensure the JWT (Signature) is not fake or been tampered with. Essentially it allows the site to trust the user. A JWT can also expire, which further enhances security. Once the token expires, the client must re-authenticate or login to obtain a new token, reducing the risk of unauthorized access in case a token has been altered.
 
-In summary, JWTs are a great tool for managing authentication and authorization in the API. It has great documentation and is relatively simple to follow. To find out more here follow this link [JSON Web Tokens](https://jwt.io/).
+In summary, JWTs are a great tool for managing authentication and authorization in the API. It is compatible with [dj-rest-auth](#dj-rest-auth) making it the perfect addition to this API. To find out more about JWTs follow this link [JSON Web Tokens](https://jwt.io/).
+
+To install the JWTs, these steps were followed:
+
+#### 1. install JWT.
+
+    pip install djangorestframework-simplejwt
+
+#### 2. update API settings to use 'sessions' or 'tokens' depending on development or production.
+
+    *IMPORTANT: include a dev environemnt variable in your env.py file*
+
+    REST_FRAMEWORK = {
+        'DEFAULT_AUTHENTICATION_CLASSES': [(
+            'rest_framework.authentication.SessionAuthentication'
+            if 'DEV' in os.environ
+            else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
+        )]
+    }
+
+#### 3. Update settings to include JWT related settings, as below.
+
+    REST_USE_JWT = True
+    JWT_AUTH_SECURE = True
+    JWT_AUTH_COOKIE = 'my-app-auth'
+    JWT_AUTH_REFRESH_COOKIE = 'my-refresh-token'
+    JWT_AUTH_SAMESITE = 'None'
+
+#### 4. Override the default user detail serializer with custom (must be created). 
+
+    REST_AUTH_SERIALIZERS = {
+        'USER_DETAILS_SERIALIZER': 'craft_api.serializers.UserSerializer'
+    }
+
+#### 5. migrate changes.
+    
+    python manage.py migrate
+
+For more information on installing and using JWT with dj-rest-auth follow the links in the [dj-rest-auth section](#dj-rest-auth)
 
 [⏫ contents](#contents)
 
@@ -773,11 +877,15 @@ ER Diagram - [Lucid Chart](https://www.lucidchart.com)
 
 Image Resizing for Testing - [img2go](https://www.img2go.com/)
 
+-----------------------------------------------
+
 ### Overal api structure, setup(settings), JWT.
 
 I took guidance from DRF API Walkthrough project on the CodeInstitute Advanced Front-End program. It aided me mostly in the setup phase, and particularly with the JWT setup. After completeing the walkthrough I had created an API which I was able to refer to.
 
 [JWT docs](https://jwt.io/introduction)
+
+[dj-res-auth docs](https://dj-rest-auth.readthedocs.io/en/latest/installation.html)
 
 [My drf-API version](https://github.com/mtmanning93/drf-API)
 
