@@ -1,5 +1,7 @@
 # Craft API
 
+![HEADER IMAGE OF SITE](url)
+
 ## Intro
 
 A social media backend designed and created with the Craft social media application in mind. The API supports user authentication and authorization, allowing users to register, login and logout. It handles the interactive CRUD operations for various database models such as profiles, posts, companies, likes, followers, comments, and approvals. All data passed through the API is validated, having various permissions and restrictions enforced based upon the users role and relationship.
@@ -59,30 +61,30 @@ To get started follow these steps to clone the github repository locally, and se
     - [Backend Iteration](#backend-iteration)
     - [Kanband Board](#kanban-board)
 - [API Features](#api-features)
-    - [Custom Permissions]()
-    - [Generic Views]()
-        - [Create A Post]()
-        - [Approve A Profile]()
-        - [Like A Post]()
-        - [Comment On A Post]()
-        - [Follower A Profile]()
-        - [Create A Company]()
-        - [validate_company method]()
-    - [Serializers]()
-        - [get method]()
-        - [validate_image]()
-        - [create method]()
-        - [to_representation]()
-    - [Filters]()
-        - [Ordering Filter]()
-        - [Search Filter]()
-        - [Filterset Fields]()
-- [Technologies]()
+    - [Custom Permissions](#custom-permissions)
+    - [Generic Views](#generic-views)
+        - [Create A Post](#create-a-post)
+        - [Approve A Profile](#approve-a-profile)
+        - [Like A Post](#like-a-post)
+        - [Comment On A Post](#comment-on-a-post)
+        - [Follow A Profile](#follow-a-profile)
+        - [Create A Company](#create-a-company)
+        - [validate_company method](#validate_company-method)
+    - [Serializers](#serializers)
+        - ['get' Method](#get-method)
+        - [validate_image](#validate_image)
+        - ['create' Method](#create-method)
+        - [to_representation](#to_representation)
+    - [Filters](#filters)
+        - [Ordering Filter](#ordering-filter)
+        - [Search Filter](#search-filter)
+        - [Filterset Fields](#filterset-fields)
+- [Technologies](#technologies)
     - [Django-Rest-Framework](#django-rest-framework-drf)
     - [Cloudinary](#cloudinary)
     - [ElephantSQL](#elephantsql)
     - [JSON Web Tokens](#json-web-tokens-jwt)
-- [Bugs](#bugs)
+- [Fixed Bugs](#fixed-bugs)
 - [Deployment](#deployment)
     - [Github Cloning](#github-cloning)
     - [Cloudinary Deployment](#cloudinary-deployment)
@@ -246,7 +248,170 @@ It was possible to close an issue from the terminal using the `close #10` comman
 
 ## API Features
 
+### Custom Permissions
 
+The only custom permission used is the `IsOwnerOrReadOnly` permission (craft_api/permissions.py), this is used throughout the API to authenticate a user. If a user is the owner they will have complete CRUD functionality over an object, if not they can only read the data provided.
+
+### Generic Views
+
+- ### Create A Post
+- ### Approve A Profile
+- ### Like A Post
+- ### Comment On A Post
+- ### Follow A Profile
+- ### Create A Company
+- ### validate_company method
+
+[⏫ contents](#contents)
+
+### Serializers
+
+- ### 'get' Method
+
+In a serializer the `get_<fieldname>` method is used to define the logic which will calculate the value of a specific field in the serialized data of an object. This method was used to inclue additional and context-dependent information in the objects serialized data.
+
+An example of using this method used thorughout the API is:
+
+*(This method ensures the is_owner field is populated with the user if the user is the object owner.)*
+
+    def get_is_owner(self, obj):
+        request = self.context['request']
+        return request.user == obj.owner
+
+Many fields were manipulated using this method another example is:
+
+*(This method ensures the approved_profile field isnt just a profile id but a profile owners username, making for better readability.)*
+
+    def get_approved_profile(self, obj):
+        return obj.profile.owner.username
+
+- ### validate_image
+
+The validate image serializer method is used to ensure an image of incorrect size cannot be added to the database, if it is a `ValidationError` is raised, with a related error message. It is a custom method however it was taken form the Code Institute DRF walkthrough referenced in the [Credits section](#credits). 
+
+*(This method makes sure the image added is under 2mb in size and in the correct dimensions, not too high or wide.)*
+
+    def validate_image(self, value):
+        """
+        Validates uploaded image size.
+        """
+        if value.size > 1024 * 1024 * 2:
+            raise serializers.ValidationError(
+                'Image size larger than 2MB!'
+            )
+        if value.image.width > 4096:
+            raise serializers.ValidationError(
+                'Image width larger than 4096px!'
+            )
+        if value.image.height > 4096:
+            raise serializers.ValidationError(
+                'Image height larger than 4096px!'
+            )
+        return value
+
+- ### 'create' Method
+
+The create method is used to define custom logic when an object is created, based on the data in the serialized representation. This was mainly used to trigger a `IntegrityError` or `ValidationError` if the data was not valid. For example:
+
+*(Taken from the LikeSerializer in likes/serializers.py.)*
+
+    def create(self, validated_data):
+        try:
+            return super().create(validated_data)
+        except IntegrityError:
+            raise serializers.ValidationError({
+                'info': 'possible duplicate'
+            })
+
+- ### to_representation
+
+`to_representation` method is used to customize how an object is serialized. In otherwords it allows you to manipulate the format, structure and content of the serialized data in the response. Here is an example:
+
+    def to_representation(self, instance):
+        """
+        Convert approved profile id field from profile.pk into
+        profile.username in a readable string format.
+        """
+        representation = super().to_representation(instance)
+        representation['profile'] = representation.pop('approved_profile')
+        return representation
+
+Here is the outcome of the manipulated profile field *(not the profile id but the profile objects owners username)*:
+
+![to_representation example](README_images/approvals_to_rep.png)
+
+[⏫ contents](#contents)
+
+### Filters
+
+To improve overall usability, and enhance the data filtering overall, `filter_backends` were added to all apps list views. Allowing easier access to specific data. Three main filter methods were used throughout the API including, ordering, search and filterset. Each can be used to narrow down the results listed.
+    
+- ### Ordering Filter
+
+Its possible to order lists differently depending on the needs of the user simply by adding a `OrderingFilter` to the filter_backends array and specifying ordering methods through the use of lookup strings, defined in the ordering_fields array. This means the list can be ordered by number of comments ascending and descending or number of likes etc.
+
+An example is shown below from the posts/views.py file:
+
+    filter_backends = [
+        filters.OrderingFilter,
+    ]
+    ordering_fields = [
+        'comments_count',
+        'likes_count',
+        'like__created_on',
+    ]
+
+- ### Search Filter
+
+A text search filter was implemented to enable searching for an object via a specific text input, this can be found in the list views across all apps in the API.
+
+To implement this you must first add filters.SearchFilter to the filter_backends array. Then specify the fields you wish to be searchable in the search_fields array. Here is an example:
+
+    filter_backends = [
+        filters.SearchFilter,
+    ]
+    search_fields = [
+        'owner__username',
+        'name',
+        'job',
+        'employer__name',
+        'employer__location',
+    ]
+
+- ### Filterset Fields
+
+The django filter feature allows selection from a list of options to filter the querset. It differs from a text search as it gives options from a selected field to choose from, for example, in a list of posts you could filter them by `owner__username`. It is relatively simple to set up and extremely useful. The difficulties can be found in writing the correct 'lookup string method' to traverse models in the database. Its implemented similarly to the search filter but does require a little more setup.
+
+To setup the filter method follow these steps:
+
+#### 1. Install django-filter.
+
+    pip install django-filter
+
+#### 2. Add django_filters to your settings.py installed apps.
+
+    INSTALLED_APPS = [
+        ...
+        'rest_framework',
+        'django_filters',
+        'profiles',
+        ...
+    ]
+
+#### 3. Import DjangoFilterBackend
+
+    from django_filters.rest_framework import DjangoFilterBackend
+
+Here is an example of its implementation:
+
+    filter_backends = [
+        DjangoFilterBackend,
+    ]
+    filterset_fields = [
+        'owner__following__followed__profile',
+        'owner__followed__owner__profile',
+        'employer__current_employee',
+    ]
 
 [⏫ contents](#contents)
 
@@ -280,7 +445,7 @@ In summary, JWTs are a great tool for managing authentication and authorization 
 
 [⏫ contents](#contents)
 
-## Bugs
+## Fixed Bugs
 
 As with any project development some bugs were discovered and required sqaushing. Although throughout this particular build there were not many here are the explanations and solutions to the bugs.
 
