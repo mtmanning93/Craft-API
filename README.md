@@ -52,18 +52,38 @@ To get started follow these steps to clone the github repository locally, and se
         - [Comment](#comment)
         - [Approval](#approval)
         - [Follower](#follower)
-- [Development]()
-    Use of issues, milestones and backend label in Craft Kanban
-- [Capabilites]()
-    Explain the most important logical views and relationship Example: liking a post, approving a profile etc. serializers extra fields
+- [API Development](#api-development)
+    - [Github Issues](#github-issues)
+        - [Templates](#templates)
+        - [Backend User Stories](#backend-user-stories)
+    - [Backend Iteration](#backend-iteration)
+    - [Kanband Board](#kanban-board)
+- [API Features](#api-features)
+    - [Custom Permissions]()
+    - [Generic Views]()
+        - [Create A Post]()
+        - [Approve A Profile]()
+        - [Like A Post]()
+        - [Comment On A Post]()
+        - [Follower A Profile]()
+        - [Create A Company]()
+        - [validate_company method]()
+    - [Serializers]()
+        - [get method]()
+        - [validate_image]()
+        - [create method]()
+        - [to_representation]()
+    - [Filters]()
+        - [Ordering Filter]()
+        - [Search Filter]()
+        - [Filterset Fields]()
 - [Technologies]()
     - [Django-Rest-Framework](#django-rest-framework-drf)
     - [Cloudinary](#cloudinary)
     - [ElephantSQL](#elephantsql)
     - [JSON Web Tokens](#json-web-tokens-jwt)
-- [Bugs]()
-    Explain issues which arose during the build
-- [Deployment]()
+- [Bugs](#bugs)
+- [Deployment](#deployment)
     - [Github Cloning](#github-cloning)
     - [Cloudinary Deployment](#cloudinary-deployment)
     - [ElephantSQL Deployment](#elephantsql-deployment)
@@ -168,6 +188,8 @@ Lastly is the Follower model. The owner field is populated by the User via a For
 
 ## API Development
 
+**All information related to agile development principles is regarding the craft-api(backend) development only. The full agile documentation for the craft project can be found here: [Craft frontend documentation](https://github.com/mtmanning93/craft-front/blob/main/README.md)**
+
 In order to aid in the development process of the API, I needed to use a method to map out some tasks, in order to achieve the complete functionality needed within the API. I used an agile approach. Creating a milestone for all backend components in the API. The issues added to this milestone were all given a backend label as some if not all of the issue tasks were related to the backend fucntionality. With this approach I was able to be productive during the development. If an issues tasks were comepletely finished I was able to close the related issue, however, some issues cover both back and frontend fucntionality. If this was the case the 'backend' label was removed from the issue. When each task was complete manual testing was carried out to ensure correct functionality, before checkng off the task and moving on to the next.
 
 The issues, milestones and kanban board were created inside the [Craft Social repository](https://github.com/mtmanning93/craft-front), the frontend which craft-api was initially created for. Once created the Kanban board (Github Project) was then linked to the craft-api repository.
@@ -206,16 +228,27 @@ To distinguish all related 'backend' tasks and user stories an iteration was cre
 
 ### Kanban Board
 
-To help with the visualization of tasks in the project I implemented a Kanban board, using GitHub projects. The board was seperated into 3 columns; To Do, In Progress, and Done. All issues in the backlog were automatically added to the Kanban 'To Do' column. Throughout the build, I would take all issues from the current iteration into the 'In Progress' column. Once all tasks were completed in the issue I would move the issue over to the 'Done' column. 
+A Kanban board was created using Github Projects to visualise the project tasks. The board was seperate into 5 columns:
 
-When possible I would close an issue from the terminal using the `close #10` command from inside a commit message. This would automatically move the issue into the 'Done' column.
+- Backlog
+- Todo
+- Bugs
+- In Progress
+- Done
 
-[Reach Kanban Board](https://github.com/users/mtmanning93/projects/7)
+All User stories are automatically added to the 'Backlog' column. From here they would be moved in to the 'Todo' column when ready to be worked on, and moved to the relevant column from there. Once all tasks in the user story were completed the issue was closed and moved to the 'Done' column.
+
+It was possible to close an issue from the terminal using the `close #10` command from inside a commit message. This would automatically move the issue into the 'Done' column.
+
+[Craft Kanban Board](https://github.com/users/mtmanning93/projects/8)
+
+[⏫ contents](#contents)
+
+## API Features
 
 
 
 [⏫ contents](#contents)
-
 
 ## Technologies
 
@@ -248,6 +281,36 @@ In summary, JWTs are a great tool for managing authentication and authorization 
 [⏫ contents](#contents)
 
 ## Bugs
+
+As with any project development some bugs were discovered and required sqaushing. Although throughout this particular build there were not many here are the explanations and solutions to the bugs.
+
+### Default Images Not Loading
+
+Initially when manual testing for the defualt profile image, I realized the file path within the profile model was incorrect, as the image was broken. On further research it was clear that the file path would require its format extension additionally. It appeared to be a change from Cloudinaries end, which triggered this. A simple additional '.png' fixed the issue and the image was shown.
+
+*The solution is found in profiles.models.py*
+
+    image = models.ImageField(
+        upload_to='images/', default='../user_defualt_icon_d7nivg.png'
+    )
+
+### Working Out Employee Count
+
+A useful piece of information to the API is how many people have listed a company as their employer form within their profile. To enable this I created a new 'employee_count' field from inside my companies/serializers.py file. However I quickly discovered to return the total number of employees for a company I would need a field name to reference. This meant updating the profile model employer field with a 'related_name' attribute. Now I was able to reverse reference the employer field using the related name, and subsequently access the total number of emplloyees as the employee count.
+
+*The solution is found in profiles.models.py*
+
+    employer = models.ForeignKey(
+        Company, on_delete=models.SET_NULL, blank=True, null=True,
+        related_name='current_employee'
+        )
+
+### Testing Image Validation
+
+When testing the APIs validate_image method found in the posts/serializers.py file different image files would be needed to test the `ValidationError` would be raised. To begin with I attempted to import and use SimpleUploadedFile to mock an image file, however when testing it became clear that this wouldnt return an image file but data, this meant the test would fail. To overcome this I uploaded test images of different sizes which would raise the `ValidationError`. The use of actual image files fixed the problem.
+
+To get images of the incorrect sizes for the validation method I used [img2go](https://www.img2go.com/) to resize a test image to incorrect sizes.
+
 
 [⏫ contents](#contents)
 
@@ -509,6 +572,8 @@ To check I ran the following in the command line:
 These are othertools used to enable the planning and development process.
 
 ER Diagram - [Lucid Chart](https://www.lucidchart.com)
+
+Image Resizing for Testing - [img2go](https://www.img2go.com/)
 
 ### Overal api structure, setup(settings), JWT.
 
