@@ -63,13 +63,13 @@ To get started follow these steps to clone the github repository locally, and se
 - [API Features](#api-features)
     - [Custom Permissions](#custom-permissions)
     - [Generic Views](#generic-views)
+    - [Main API Features](#main-api-features)
         - [Create A Post](#create-a-post)
         - [Approve A Profile](#approve-a-profile)
         - [Like A Post](#like-a-post)
         - [Comment On A Post](#comment-on-a-post)
         - [Follow A Profile](#follow-a-profile)
         - [Create A Company](#create-a-company)
-        - [validate_company method](#validate_company-method)
     - [Serializers](#serializers)
         - ['get' Method](#get-method)
         - [validate_image](#validate_image)
@@ -254,13 +254,46 @@ The only custom permission used is the `IsOwnerOrReadOnly` permission (craft_api
 
 ### Generic Views
 
-- ### Create A Post
-- ### Approve A Profile
-- ### Like A Post
-- ### Comment On A Post
-- ### Follow A Profile
+Rest frameworks generic views were used in develpoment. They are simple to use and enable rapid development for APIs. Other benefits to generic views include a reduction in code volume, built in security features, and extensive documentation for development and testing.
+Overall generic views made for an efficient API build, and allowed for heightened security along with specific testing practices. Combined this allowed for a more robust API.
+
+### Main API Features
+
+The main functions of the API are briefly described below. All features are implemented using generic class based views with custom validation methods when necessary.
+
+- ### Create a Post
+
+Registered users have the ability to create a post, a post main data consists of a title, image, and content. When a post is created it is listed in the posts list view. Post objects can be updated by the owner.
+
+- ### Approve a Profile
+
+Authenticated users can approve a profile, this is similar to liking a post but instead liking a profile. The `ApprovalList` view contains a `perform_create` method which validates if the user is approving their own profile. If they are a ValidationError is raised with the message "You cannot approve your own profile". When a profile has been 'approved' it is reflected in the profile instances 'approval_count' field. The `unique_together` constraint ensures a user can not approve the same profile twice, however deleting the approval will decrement the profile instances 'approval_count' field.
+
+- ### Like a Post
+
+Users can like a post instance, this is then reflected in the posts 'likes_count' field. It is a method to show the popularity of a post. The posts can then be ordered by the 'likes_count' field showing the 'most liked' posts. A user can only like a post once thanks to the `unique_together` constraint. Deleting a like instance will decrement the 'likes_count' field from the related post.
+
+- ### Comment on a Post
+
+Another main feature is allowing users to post a comment related to post. The comment must be related to a post instance, via the post field. A comments data includes the owner (commentor), content, created_on. This data creates a conversation like format when combined with the `created_on` ordering. For example you could select all comments related to a post and they will be listed oldest to newest. Authenitcated users have complete CRUD functionality over a comment object they own.
+
+- ### Follow a Profile
+
+Profiles can be followed, this means when a user creates a follower instance it must be related to a profile via the 'followed' field. A follower instance cannot be updated just created and destroyed. When a user follows a profile, the follower instance is created and two other tasks take place:
+
+- the followed profiles 'follower_count' field increments by one
+- the creator of the follower instance, will increment their own profiles 'following_count' field by one
+
+Equally when a follower instance is deleted, it is removed from the database and:
+
+- the followed profiles 'follower_count' field decrements by one.
+- the creator of the follower instance, will decrement their own profiles 'following_count' field by one
+
 - ### Create A Company
-- ### validate_company method
+
+A feature important to the character of the site is the creation of a company. An authenticated user has the ability to create a company instance. On creation they automatically becomes the company owner. A single user can only be the owner of a maximum of three company instances. This is achieved through the `validate_company` method within the CompanyList view. The company must also be unique, it must not share the same name and location credentials as another. It can however have the same name and different location and vice versa, this is to allow for franchised companies to be owned by different users or for multiple companies in the same location.
+
+Another feature related to a company instance is the ability to access the `employee_count` of each company. This is available when a company instance has been selected in a profiles employer field. When selected the `employee_count` field of the company will increment and decrement when removed.
 
 [⏫ contents](#contents)
 
