@@ -759,9 +759,11 @@ In order to deploy the api to Heroku I followed these 10 steps:
 For this api, you will need the following 'Config Vars':
 
 - ALLOWED_HOST: Url of website. Url enabled in site `settings.py` file.
+- CLIENT_ORIGIN: Url from deployed frontend site.
+- CLIENT_ORIGIN_DEV: Url from the frontend development server.
 - CLOUDINARY_URL: Get from Cloudinary.
 - DATABASE_URL: Get from your SQL provider.
-- DISABLE_COLLECTSTATIC: Set to 0.
+- DISABLE_COLLECTSTATIC: Set to 1.
 - SECRET_KEY: Django project secret key, chosen by you.
 
 ![Project necessary Config Vars](README_images/deployment/config_vars.png)
