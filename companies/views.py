@@ -47,7 +47,7 @@ class CompanyList(generics.ListCreateAPIView):
         """
         Validates Company creation.
         If company is already in the list a ValidationError is raised.
-        If owner already has 3 companies in the ölist a ValidationError
+        If owner already has 3 companies in the list a ValidationError
         is raised.
         """
         # Check the user's company count

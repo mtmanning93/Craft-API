@@ -48,7 +48,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             'created_on', 'updated_on', 'image',
             'is_owner', 'employer', 'following_id',
             'approval_id', 'posts_count', 'following_count',
-            'followers_count', 'approval_count',
+            'followers_count', 'approval_count', 'employer_pk',
         ]
 
     def to_representation(self, instance):
@@ -62,6 +62,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             try:
                 company = Company.objects.get(pk=employer_pk)
                 data['employer'] = f"{company.name} - {company.location}"
+                data['employer_pk'] = employer_pk
             except Company.DoesNotExist:
                 data['employer'] = 'null'
+                data['employer_pk'] = None
         return data
