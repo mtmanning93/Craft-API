@@ -18,6 +18,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     followers_count = serializers.ReadOnlyField()
     following_count = serializers.ReadOnlyField()
     approval_count = serializers.ReadOnlyField()
+    employer_pk = serializers.ReadOnlyField(source='employer.pk')
 
     def get_is_owner(self, obj):
         request = self.context['request']
@@ -62,8 +63,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             try:
                 company = Company.objects.get(pk=employer_pk)
                 data['employer'] = f"{company.name} - {company.location}"
-                data['employer_pk'] = employer_pk
             except Company.DoesNotExist:
                 data['employer'] = 'null'
-                data['employer_pk'] = None
         return data
