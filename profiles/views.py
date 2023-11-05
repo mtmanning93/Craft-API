@@ -47,7 +47,7 @@ class ProfileList(generics.ListAPIView):
     ]
 
 
-class ProfileDetail(generics.RetrieveUpdateAPIView):
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Allows the retrieval of a profile and the ability to
     edit it if the user is the owner.
