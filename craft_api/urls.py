@@ -26,6 +26,7 @@ urlpatterns = [
     path(
         'dj-rest-auth/registration/', include('dj_rest_auth.registration.urls')
     ),
+    path('dj-rest-auth/delete-profile/', logout_and_delete_route),
     path('', include('profiles.urls')),
     path('', include('companies.urls')),
     path('', include('posts.urls')),

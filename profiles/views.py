@@ -1,11 +1,9 @@
 from django.db.models import Count
-from rest_framework import generics, filters, status
-from rest_framework.response import Response
+from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Profile
 from .serializers import ProfileSerializer
 from craft_api.permissions import IsOwnerOrReadOnly
-from django.contrib.auth import logout as django_logout
 
 
 class ProfileList(generics.ListAPIView):
@@ -63,23 +61,18 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
 
-    def destroy(self, request, *args, **kwargs):
-        profile = self.get_object()
+    # def destroy(self, request, *args, **kwargs):
+    #     profile = self.get_object()
 
-        # Check if the current user is the owner of the profile
-        if not request.user == profile.owner:
-            return Response(
-                {"detail": "You do not have permission to perform this action."},
-                status=status.HTTP_403_FORBIDDEN,
-            )
+    #     if not request.user == profile.owner:
+    #         return Response(
+    #             {"detail": "You do not have permission to perform this action."},
+    #             status=status.HTTP_403_FORBIDDEN,
+    #         )
 
-        # Delete the profile
-        profile.delete()
+    #     profile.delete()
+    #     request.user.delete()
 
-        # Delete the user instance
-        request.user.delete()
+    #     django_logout(request)
 
-        # Log the user out
-        django_logout(request)
-
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
