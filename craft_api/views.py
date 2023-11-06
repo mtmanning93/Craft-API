@@ -15,13 +15,12 @@ def root_route(request):
     })
 
 @api_view(['POST'])
-def logout_and_delete_route(request):
+def logout_and_delete_route(request, profile):
 
     user = request.user
 
     if user.is_authenticated:
         try:
-            profile = Profile.objects.get(owner=user)
             profile.delete()
         except Profile.DoesNotExist:
             pass

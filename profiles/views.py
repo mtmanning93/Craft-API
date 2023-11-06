@@ -61,18 +61,16 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
 
-    # def destroy(self, request, *args, **kwargs):
-    #     profile = self.get_object()
+    def destroy(self, request, *args, **kwargs):
+        profile = self.get_object()
 
-    #     if not request.user == profile.owner:
-    #         return Response(
-    #             {"detail": "You do not have permission to perform this action."},
-    #             status=status.HTTP_403_FORBIDDEN,
-    #         )
+        if not request.user == profile.owner:
+            return Response(
+                {"detail": "You do not have permission to perform this action."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-    #     profile.delete()
-    #     request.user.delete()
+        # Log the user out and delete the associated user and profile
+        logout_and_delete_route(request, profile)
 
-    #     django_logout(request)
-
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)
