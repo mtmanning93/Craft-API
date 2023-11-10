@@ -1,6 +1,6 @@
 # Craft API
 
-![HEADER IMAGE OF SITE](url)
+![Craft Social Image](./README_images/responsive.png)
 
 ## Intro
 
