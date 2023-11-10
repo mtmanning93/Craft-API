@@ -18,6 +18,8 @@ The Craft API serves the following functions:
 - Allows role based access via permissions and restrictions.
 - Allow cross model interactions such as, liking a post, approving a profile, following a profile, and leaving a comment on a post.
 
+This repository is for the Craft-API backend. The 'Craft Social' frontend repository can be found at [Craft Social](https://github.com/mtmanning93/craft-front).
+
 ### Live Site
 
 [Hosted on Heroku](https://craft-api-aeec93e46ff2.herokuapp.com/)
