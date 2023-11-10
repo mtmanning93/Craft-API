@@ -30,7 +30,7 @@ This repository is for the Craft-API backend. The 'Craft Social' frontend reposi
 
 ### Project Stack
 
-    Python, Django Rest Framework, Cloudinary, JSON Web Tokens, ElephantSQL with PostgreSQL, Heroku.
+Python, Django Rest Framework, Cloudinary, JSON Web Tokens, ElephantSQL with PostgreSQL, Heroku.
 
 ### Get Started
 
