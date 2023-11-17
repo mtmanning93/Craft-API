@@ -65,7 +65,7 @@ To get started follow these steps to clone the github repository locally, and se
 - [API Features](#api-features)
     - [Custom Permissions](#custom-permissions)
     - [Generic Views](#generic-views)
-    - [API Endpoints](endpoints.md)
+    - [API Endpoints *(link to endpoints.md)*](endpoints.md)
     - [Main API Features](#main-api-features)
         - [Create A Post](#create-a-post)
         - [Approve A Profile](#approve-a-profile)
