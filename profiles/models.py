@@ -12,9 +12,9 @@ class Profile(models.Model):
     when in list view.
     """
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, blank=True)
-    bio = models.TextField(blank=True)
-    job = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=75, blank=True)
+    bio = models.TextField(max_length=200, blank=True)
+    job = models.CharField(max_length=75, blank=True)
     employer = models.ForeignKey(
         Company, on_delete=models.SET_NULL, blank=True, null=True,
         related_name='current_employee'
