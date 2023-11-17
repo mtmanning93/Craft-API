@@ -11,7 +11,7 @@ from .settings import (
 @api_view()
 def root_route(request):
     return Response({
-        "message": "Welcome to the craft-api for the Craft social media app."
+        "message": "Welcome to the craft-api, built for the Craft social media app."
     })
 
 # @api_view(['POST'])
