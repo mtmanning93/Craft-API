@@ -46,7 +46,8 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 5 | Navigate to a profile details page using `/profiles/1/` url as a logged out user | GET | Displays profile details of the profile with id: 1 | 200 | Pass | - |
 | 6 | Navigate to a profile details page using `/profiles/1/` url as a logged in user | GET | Displays profile details of the profile with id: 1 | 200 | Pass | - |
-| 7 | Login and navigate to `/profiles/<your profile id>/` update the HTML form name field and click 'PUT' | GET | Profiles JSON name field is updated with the updated name | 200 | Pass | - |
+| 7 | Login and navigate to `/profiles/1/` (owned profile) update the HTML form name field and click 'PUT' | GET | The profiles JSON name field is updated with the updated name | 200 | Pass | - |
+| 8 | Login and navigate to `/profiles/1/` (owned profile) update the HTML form bio field and click 'PUT' | GET | The profiles JSON bio field is updated with the updated information | 200 | Pass | - |
 
 <details>
 <summary>Test 5 Screenshots</summary>
@@ -63,4 +64,9 @@
 
 ![Test 7 Before Update](README_images/testing/manual/profile-form.png)
 ![Test 7 After Update](README_images/testing/manual/update-profile-name.png)
+</details>
+<summary>Test 8 Screenshots</summary>
+
+![Test 8 Before Update](README_images/testing/manual/profile-form.png)
+![Test 8 After Update](README_images/testing/manual/update-profile-bio.png)
 </details>
