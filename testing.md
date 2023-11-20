@@ -18,12 +18,12 @@
 <details>
 <summary>Test 1 Screenshots</summary>
 
-![Test 1](README_images/testing/manual/root.png)
+![Test 1](README_images/testing/manual/root/root.png)
 </details>
 <details>
 <summary>Test 2 Screenshots</summary>
 
-![Test 2](README_images/testing/manual/root-login.png)
+![Test 2](README_images/testing/manual/root/root-login.png)
 </details>
 
 ## `/profiles/` Tests
