@@ -94,11 +94,7 @@ To get started follow these steps to clone the github repository locally, and se
     - [Cloudinary Deployment](#cloudinary-deployment)
     - [ElephantSQL Deployment](#elephantsql-deployment)
     - [Heroku Deployment](#heroku-deployment)
-- [Testing](#testing)
-    - [Automated Testing](#automated-testing)
-    - [Coverage](#coverage)
-    - [Manual Testing](#manual-testing)
-    - [Python Linter](#python-linter)
+- [Testing *(link to testing.md)*](testing.md)
 - [Credits](#credits)
 
 ## Planning
@@ -794,85 +790,6 @@ For this api, you will need the following 'Config Vars':
 **10. Click 'View' at the bottom of the 'Manual Deploy' section to view the deployed api.**
 
 ![View deployed site button](README_images/deployment/view_site.png)
-
-[⏫ contents](#contents)
-
-## Testing
-
-### Automated Testing
-
-To test test the overall functionality of the craft_api project and its containing apps, automated testing was implemented with the goal of testing all views, serializers, custom permissions and models which were created during the build. During the testing phase there was **92** tests passed, including **197** assertions. There are many more tests which could possibly be written and cover more situations, however, the goal with the current applicaiton scope was to simple cover as much functionality as possible using `coverage` as a testing tool.
-
-Initially when building the testcases I had to learn the difference bewteen TestCase and APITestCase, however after reading the necessary documents it was clear that APITestCase would be useful for testing api endpoints therefore it was used for testiing views, serializers and permissions. TestCase was useful for testing the models as this doesnt rewuire the same functionality in the tests.
-
-*Some resources I used to build knowledge and write tests: [Testing references](#testing-using-apitestcase-apiclient)*
-
-[⏫ contents](#contents)
-
-### Coverage
-
-I used `coverage` throughout the testing phase to measure the percentage of each apps covered code. `Coverage` highlighted which specific lines of code were not tested when running the html server. This enabled me to build more tests to target these lines of code. I seperated each apps tests into seperate files for clarity, each app had the folowing tests file structure:
-
-    - app/
-        - tests/
-            - __init__.py
-            - test_models.py
-            - test_serializers.py
-            - test_views.py
-
-After using `coverage` I was able to reach **100%** of the code covered within all apps.
-
-The main project file 'craft_api' only reached **90%** coverage. This is due to wsgi.py and asgi.py files which are created by Django as entry points for different application servers and the settings.py file.
-
-To run `coverage` for the entire application, type in command line:
-
-    coverage run manage.py test
-
-To run `coverage` for each app, type in command line:
-
-    coverage run --source=<app_name> manage.py test <app_name>
-
-<details>
-<summary>Coverage Reports Screenshots</summary>
-
-![Approvals report](README_images/testing/approvals_cov.png)
-![Comments report](README_images/testing/comments_cov.png)
-![Companies report](README_images/testing/companies_cov.png)
-![Craft_api 90% report](README_images/testing/craft_api_cov.png)
-![Followers report](README_images/testing/followers_cov.png)
-![Likes report](README_images/testing/likes_cov.png)
-![Posts report](README_images/testing/posts_cov.png)
-![Profiles report](README_images/testing/profiles_cov.png)
-</details>
-
-[⏫ contents](#contents)
-
-### Manual Testing
-
-***
-
-[⏫ contents](#contents)
-
-### Python Linter
-
-To check for syntax errors in the project's Python code I used `pycodestyle` *(formerly pep8)*. Using this I was able to test my code from inside the command line. Its a fast and easy way to heck the syntax as it returns the file name and lines of the error.
-
-To install `pycodestyle` in the command line:
-
-    pip install pycodestyle
-
-Then to test the files in the command line:
-
-    pycodestyle <file_name>
-    or
-    pycodestyle .
-
-When initially running the linter there were a few errors which I addressed and corrected. After these corrections the only errors left were *'E501 line too long'*. These were mostly found in the migration files automatically created during the `makemigration` command. After updating these there were no more errors within my files.
-
-To check I ran the following in the command line:
-
-    pycodestyle <app_name> *(all apps)*
-    pycodestyle . (only errors shown in .vscode files)
 
 [⏫ contents](#contents)
 

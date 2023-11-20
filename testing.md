@@ -1,15 +1,104 @@
-# Manual Testing
+# Testing
 
-- [/](#tests)
-- [/profiles/](#profiles-tests)
-- [/profiles/<int:pk>](#profilesintpk-tests)
-- [/posts/](#posts-tests)
-- [/posts/<int:pk>](#postsintpk-tests)
-- [/comments/](#comments-tests)
-- [/comments/<int:pk>](#commentsintpk-tests)
-- [/companies/](#)
-- [/companies/<int:pk>](#companiesintpk-tests)
+## Contents
 
+- [Automated Testing](#automated-testing)
+- [Coverage](#coverage)
+- [Manual Testing](#manual-testing)
+- [Python Linter](#python-linter)
+- [Manual Testing](#manual-testing)
+    - [/](#tests)
+    - [/profiles/](#profiles-tests)
+    - [/profiles/<int:pk>](#profilesintpk-tests)
+    - [/posts/](#posts-tests)
+    - [/posts/<int:pk>](#postsintpk-tests)
+    - [/comments/](#comments-tests)
+    - [/comments/<int:pk>](#commentsintpk-tests)
+    - [/companies/](#companies-tests)
+    - [/companies/<int:pk>](#companiesintpk-tests)
+    - [/approvals/](#approvals-tests)
+    - [/approvals/<int:pk>](#approvalsintpk-tests)
+    - [/likes/](#likes-tests)
+    - [/likes/<int:pk>](#likesintpk-tests)
+    - [/followers/](#followers-tests)
+    - [/followers/<int:pk>](#followersintpk-tests)
+
+[⏪ Main README](README.md)
+
+## Automated Testing
+
+To test test the overall functionality of the craft_api project and its containing apps, automated testing was implemented with the goal of testing all views, serializers, custom permissions and models which were created during the build. During the testing phase there was **92** tests passed, including **197** assertions. There are many more tests which could possibly be written and cover more situations, however, the goal with the current applicaiton scope was to simple cover as much functionality as possible using `coverage` as a testing tool.
+
+Initially when building the testcases I had to learn the difference bewteen TestCase and APITestCase, however after reading the necessary documents it was clear that APITestCase would be useful for testing api endpoints therefore it was used for testiing views, serializers and permissions. TestCase was useful for testing the models as this doesnt rewuire the same functionality in the tests.
+
+*Some resources I used to build knowledge and write tests: [Testing references](#testing-using-apitestcase-apiclient)*
+
+[⏫ contents](#contents)
+
+## Coverage
+
+I used `coverage` throughout the testing phase to measure the percentage of each apps covered code. `Coverage` highlighted which specific lines of code were not tested when running the html server. This enabled me to build more tests to target these lines of code. I seperated each apps tests into seperate files for clarity, each app had the folowing tests file structure:
+
+    - app/
+        - tests/
+            - __init__.py
+            - test_models.py
+            - test_serializers.py
+            - test_views.py
+
+After using `coverage` I was able to reach **100%** of the code covered within all apps.
+
+The main project file 'craft_api' only reached **90%** coverage. This is due to wsgi.py and asgi.py files which are created by Django as entry points for different application servers and the settings.py file.
+
+To run `coverage` for the entire application, type in command line:
+
+    coverage run manage.py test
+
+To run `coverage` for each app, type in command line:
+
+    coverage run --source=<app_name> manage.py test <app_name>
+
+<details>
+<summary>Coverage Reports Screenshots</summary>
+
+![Approvals report](README_images/testing/approvals_cov.png)
+![Comments report](README_images/testing/comments_cov.png)
+![Companies report](README_images/testing/companies_cov.png)
+![Craft_api 90% report](README_images/testing/craft_api_cov.png)
+![Followers report](README_images/testing/followers_cov.png)
+![Likes report](README_images/testing/likes_cov.png)
+![Posts report](README_images/testing/posts_cov.png)
+![Profiles report](README_images/testing/profiles_cov.png)
+</details>
+
+[⏫ contents](#contents)
+
+## Python Linter
+
+To check for syntax errors in the project's Python code I used `pycodestyle` *(formerly pep8)*. Using this I was able to test my code from inside the command line. Its a fast and easy way to heck the syntax as it returns the file name and lines of the error.
+
+To install `pycodestyle` in the command line:
+
+    pip install pycodestyle
+
+Then to test the files in the command line:
+
+    pycodestyle <file_name>
+    or
+    pycodestyle .
+
+When initially running the linter there were a few errors which I addressed and corrected. After these corrections the only errors left were *'E501 line too long'*. These were mostly found in the migration files automatically created during the `makemigration` command. After updating these there were no more errors within my files.
+
+To check I ran the following in the command line:
+
+    pycodestyle <app_name> *(all apps)*
+    pycodestyle . (only errors shown in .vscode files)
+
+[⏫ contents](#contents)
+
+## Manual Testing
+
+To accompany the automated testing, the Craft-API underwent manual testing on all endpoints, covering all CRUD functionality and serialised data, checking `to_representation` methods also. Below are the tests carried out at each API endpoint, they have been seperated by endpoint and details the HTTP method used for the test, expected outcomes, and if the test failed the action which was taken to ensure a Pass was made. All tests include screenshots, to view the screenshot select the test number in the screenshots table below the test table.
 
 ## `/` Tests
 
@@ -29,6 +118,8 @@
 ![Test 2](README_images/testing/manual/root/root-login.png)
 </details>
 
+[⏫ contents](#contents)
+
 ## `/profiles/` Tests
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
@@ -46,6 +137,8 @@
 
 ![Test 4](README_images/testing/manual/profiles/profiles-login.png)
 </details>
+
+[⏫ contents](#contents)
 
 ## `/profiles/<int:pk>/` Tests
 
@@ -71,6 +164,8 @@
 | <details><summary>Test 7</summary> ![Test 7 Before Update](README_images/testing/manual/profiles/profile-form.png) ![Test 7 After Update](README_images/testing/manual/profiles/update-profile-name.png) </details> | <details><summary>Test 15</summary> ![Test 15](README_images/testing/manual/profiles/employer-update.png) </details> |
 | <details><summary>Test 8</summary> ![Test 8](README_images/testing/manual/profiles/profiles-name-error.png) </details> | <details><summary>Test 16</summary> ![Test 16](README_images/testing/manual/profiles/employer-null.png) </details> |
 
+[⏫ contents](#contents)
+
 ## `/posts/` Tests
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
@@ -92,6 +187,8 @@
 | <details><summary>Test 19</summary> ![Test 19](README_images/testing/manual/posts/create-post-form.png) ![Test 19](README_images/testing/manual/posts/created-post.png) ![Test 19](README_images/testing/manual/posts/new-post-list.png) </details> | <details><summary>Test 24</summary> ![Test 24](README_images/testing/manual/posts/image-too-high.png) </details> |
 | <details><summary>Test 20</summary> ![Test 20](README_images/testing/manual/posts/invalid-title.png) </details> | <details><summary>Test 25</summary> ![Test 25](README_images/testing/manual/posts/default-post-image.png)</details> |
 | <details><summary>Test 21</summary> ![Test 21](README_images/testing/manual/posts/posts-lists-login.png) </details> |  |
+
+[⏫ contents](#contents)
 
 ## `/posts/<int:pk>/` Tests
 
@@ -116,6 +213,8 @@
 | <details><summary>Test 29</summary> ![Test 29](README_images/testing/manual/posts/update-title-invalid.png) </details> | <details><summary>Test 34</summary> ![Test 34](README_images/testing/manual/posts/update-too-high.png) </details> |
 | <details><summary>Test 30</summary> ![Test 30](README_images/testing/manual/posts/content-updates.png) </details> | <details><summary>Test 35</summary> ![Test 35 Notification](README_images/testing/manual/posts/delete-notification.png) ![Test 35](README_images/testing/manual/posts/delete-post.png) </details> |
 
+[⏫ contents](#contents)
+
 ## `/comments/` Tests
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
@@ -129,6 +228,8 @@
 |-------------|--------------|
 | <details><summary>Test 36</summary> ![Test 36](README_images/testing/manual/comments/comments-list.png) </details> | <details><summary>Test 38</summary> ![Test 38](README_images/testing/manual/comments/is-owner-true.png) </details> |
 | <details><summary>Test 37</summary> ![Test 37](README_images/testing/manual/comments/comments-login.png) </details> | <details><summary>Test 39</summary> ![Test 39](README_images/testing/manual/comments/comment-details.png) ![Test 39 List](README_images/testing/manual/comments/comments-new-list.png) </details> |
+
+[⏫ contents](#contents)
 
 ## `/comments/<int:pk>/` Tests
 
@@ -149,6 +250,8 @@
 | <details><summary>Test 41</summary> ![Test 41](README_images/testing/manual/comments/owner-comment-details.png) </details> | <details><summary>Test 45</summary> ![Test 45](README_images/testing/manual/comments/now.png) </details> |
 | <details><summary>Test 42</summary> ![Test 42 Before](README_images/testing/manual/comments/update-before.png) ![Test 42 After](README_images/testing/manual/comments/update-after.png) </details> | <details><summary>Test 46</summary> ![Test 46](README_images/testing/manual/comments/no-input.png) </details> |
 | <details><summary>Test 43</summary> ![Test 43](README_images/testing/manual/comments/created-on.png) </details> | <details><summary>Test 47</summary> ![Test 47 Modal](README_images/testing/manual/comments/delete-comment-confirm.png) ![Test 47](README_images/testing/manual/comments/delete-comment.png) </details> |
+
+[⏫ contents](#contents)
 
 ## `/companies/` Tests
 
@@ -177,6 +280,8 @@
 | <details><summary>Test 51</summary> ![Test 51](README_images/testing/manual/companies/blank-name.png) </details> | <details><summary>Test 56</summary> ![Test 56](README_images/testing/manual/companies/company-type-too-long.png) </details> | <details><summary>Test 60</summary> ![Test 60](README_images/testing/manual/companies/delete-company-modal.png) ![Test 60 Deleted](README_images/testing/manual/companies/company-deleted.png) </details> |
 | <details><summary>Test 52</summary> ![Test 52](README_images/testing/manual/companies/only-name.png) </details> |  |  |
 
+[⏫ contents](#contents)
+
 ## `/companies/<int:pk>/` Tests
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
@@ -198,3 +303,79 @@
 | <details><summary>Test 63</summary> ![Test 63](README_images/testing/manual/companies/update-name-too-long.png) </details> | <details><summary>Test 68</summary> ![Test 68](README_images/testing/manual/companies/update-employer.png) ![Test 68 Employee Count](README_images/testing/manual/companies/employee-decrease.png) </details> |
 | <details><summary>Test 64</summary> ![Test 64](README_images/testing/manual/companies/update-location-too-long.png) </details> | <details><summary>Test 69</summary> ![Test 69 Before Delete](README_images/testing/manual/companies/employer-before-delete.png) ![Test 69 After Delete](README_images/testing/manual/companies/employer-after-delete.png) </details> |
 | <details><summary>Test 65</summary> ![Test 65](README_images/testing/manual/companies/update-type-too-long.png) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/approvals/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| 70 | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test 70</summary> ![Test 70](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/approvals/<int:pk>/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/likes/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/likes/<int:pk>/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/followers/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+## `/followers/<int:pk>/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+
+[⏫ contents](#contents)
+
+[⏪ Main README](README.md)

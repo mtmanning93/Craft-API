@@ -1,10 +1,8 @@
-[⏪ Main README](README.md)
-
-[⏩ Craft Social Frontend Repository](https://github.com/mtmanning93/craft-front)
-
 # API Endpoints
 
 The table below shows all endpoints related to the DRF API, with example outputs, post data, and explanations. Generic views were used throughout the API build, here they are broken down to explain further.
+
+[⏪ Main README](README.md)
 
 | **Url**                     	| **HTTP Method** 	| **CRUD Operation** 	| **View Type** 	| **POST Data Format**                                                                                                                        	| **GET Example Output**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             	| **Explanation**                                                                                                                                                            	|
 |-----------------------------	|-----------------	|--------------------	|---------------	|---------------------------------------------------------------------------------------------------------------------------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
@@ -58,5 +56,3 @@ The endpoints table was created at [Table Generators.com](https://www.tablesgene
 [⏫ top](#api-endpoints)
 
 [⏪ Main README](README.md)
-
-[⏩ Craft Social Frontend Repository](https://github.com/mtmanning93/craft-front)
