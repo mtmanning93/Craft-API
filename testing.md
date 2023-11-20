@@ -22,10 +22,6 @@
     - [/followers/](#followers-tests)
     - [/followers/<int:pk>](#followersintpk-tests)
 
-    - [/dj-rest-auth/user]()
-    - [/dj-rest-auth/registration/]()
-    - [/dj-rest-auth/login/]()
-
 [⏪ Main README](README.md)
 
 ## Automated Testing
@@ -104,7 +100,7 @@ To check I ran the following in the command line:
 
 ## Manual Testing
 
-To accompany the automated testing, the Craft-API underwent manual testing on all endpoints, covering all CRUD functionality and serialised data, checking `to_representation` methods also. Below are the tests carried out at each API endpoint, they have been seperated by endpoint and details the HTTP method used for the test, expected outcomes, and if the test failed the action which was taken to ensure a Pass was made. All tests include screenshots, to view the screenshot select the test number in the screenshots table below the test table.
+To accompany the automated testing, the Craft-API underwent manual testing on all custom endpoints, covering all CRUD functionality, serialised data, and checking `to_representation` methods. Below are the tests carried out at each API endpoint, they have been seperated by custom endpoint and details the HTTP method used for the test, and expected outcomes. If the test failed the action which was taken to ensure a Pass was made. All tests include screenshots, to view the screenshot select the test number in the screenshots table below the main tests table for each endpoint.
 
 ## `/` Tests
 

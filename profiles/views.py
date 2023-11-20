@@ -42,7 +42,6 @@ class ProfileList(generics.ListAPIView):
     filterset_fields = [
         'owner__following__followed__profile',
         'owner__followed__owner__profile',
-        # colleague filter
         'employer__current_employee',
     ]
 
@@ -60,17 +59,3 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
         following_count=Count('owner__following', distinct=True),
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
-
-    # def destroy(self, request, *args, **kwargs):
-    #     profile = self.get_object()
-
-    #     if not request.user == profile.owner:
-    #         return Response(
-    #             {"detail": "You do not have permission to perform this action."},
-    #             status=status.HTTP_403_FORBIDDEN,
-    #         )
-
-    #     # Log the user out and delete the associated user and profile
-    #     logout_and_delete_route(request, profile)
-
-    #     return Response(status=status.HTTP_204_NO_CONTENT)

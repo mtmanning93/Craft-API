@@ -32,9 +32,12 @@ class FollowerList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if self.request.user == serializer.validated_data.get('followed'):
-            raise serializers.ValidationError("You cannot follow your own profile.")
-        
+            raise serializers.ValidationError(
+                "You cannot follow your own profile."
+            )
+
         serializer.save(owner=self.request.user)
+
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
     """

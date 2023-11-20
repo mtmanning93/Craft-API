@@ -79,7 +79,7 @@ class IsOwnerOrReadOnlyTest(APITestCase):
         update_data = {
             'name': 'Updated Object'
         }
-        # Test cannot update
+
         response = self.client.put(
             f'/posts/{self.user1_object.pk}/', update_data
         )

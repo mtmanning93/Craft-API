@@ -97,10 +97,10 @@ class CompanyDetail(generics.RetrieveUpdateDestroyAPIView):
         If a company with the same title and location exists,
         a ValidationError is raised.
         """
-        existing_company = Company.objects.exclude(pk=self.get_object().pk).filter(
-            name=company_title,
-            location=company_location
-        ).first()
+        existing_company = Company.objects.exclude(
+            pk=self.get_object().pk).filter(
+                name=company_title, location=company_location
+            ).first()
 
         if existing_company:
             raise serializers.ValidationError(

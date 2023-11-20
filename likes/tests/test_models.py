@@ -37,7 +37,7 @@ class LikeModelTest(TestCase):
         """
         Like.objects.create(owner=self.user, post=self.post)
 
-        # Create a duplicate like with the same user
+        # Create duplicate like with the same user
         with self.assertRaises(IntegrityError):
             Like.objects.create(owner=self.user, post=self.post)
 
