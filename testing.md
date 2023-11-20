@@ -15,13 +15,13 @@
     - [/comments/<int:pk>](#commentsintpk-tests)
     - [/companies/](#companies-tests)
     - [/companies/<int:pk>](#companiesintpk-tests)
-
     - [/approvals/](#approvals-tests)
     - [/approvals/<int:pk>](#approvalsintpk-tests)
     - [/likes/](#likes-tests)
     - [/likes/<int:pk>](#likesintpk-tests)
     - [/followers/](#followers-tests)
     - [/followers/<int:pk>](#followersintpk-tests)
+
     - [/dj-rest-auth/user]()
     - [/dj-rest-auth/registration/]()
     - [/dj-rest-auth/login/]()
@@ -344,11 +344,23 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 82 | Navigate to the 'likes' url as a logged out user | GET | Displays list of likes, including count and pagination fields. | 200 | Pass | - |
+| 83 | Navigate to the 'likes' url as a logged in user | GET | Displays list of likes, including create like HTML form. | 200 | Pass | - |
+| 84 | Create a like by selecting a post title in the dropdown menu, click 'POST'. | POST | Like instance is created | 201 | Pass | - |
+| 85 | Create an approval by selected a post you have already liked from the dropdown menu, click 'POST'. | POST | Validation error is raised: "Possible Duplicate". | 400 | Pass | - |
+| 86 | Attempt to create a like with invalid JSON data { "post": "Invalid" }, click 'POST'. | POST | Validation error is raised. | 400 | Pass | - |
+| 87 | Attempt to create an approval with valid JSON data { "profile": <profile.id> }, click 'POST'. | POST | The like is created. | 201 | Pass | - |
+| 88 | After creating a like check the liked posts 'like_count' has incremented by 1. | POST | likes_count of the related post has increased by 1. | 201 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+| <details><summary>Test 82</summary> ![Test 82](README_images/testing/manual/likes/like-list.png) </details> |  |
+| <details><summary>Test 83</summary> ![Test 83](README_images/testing/manual/likes/like-list-form.png) </details> |  |
+| <details><summary>Test 84</summary> ![Test 84](README_images/testing/manual/likes/create-like.png) </details> |  |
+| <details><summary>Test 85</summary> ![Test 85](README_images/testing/manual/likes/duplicate.png) </details> |  |
+| <details><summary>Test 86</summary> ![Test 86](README_images/testing/manual/likes/invalid-json.png) </details> |  |
+| <details><summary>Test 87</summary> ![Test 87](README_images/testing/manual/likes/create-json.png) </details> |  |
+| <details><summary>Test 88</summary> ![Test 88](README_images/testing/manual/likes/likes-count.png) </details> |  |
 
 [⏫ contents](#contents)
 
@@ -356,11 +368,13 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 89 | Navigate to a like details url owned by the user, delete the instance | DELETE | Like instance is deleted | 204 | Pass | - |
+| 90 | After deleting a like check the previously liked posts 'like_count' has decreased by 1. | DELETE | likes_count of the related post has decreased by 1. | 204 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+| <details><summary>Test 89</summary> ![Test 89](README_images/testing/manual/likes/likes-delete.png) </details> |  |
+| <details><summary>Test 90</summary> ![Test 90](README_images/testing/manual/likes/likes-count-decrement.png) </details> |  |
 
 [⏫ contents](#contents)
 
