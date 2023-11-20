@@ -38,7 +38,6 @@ class CompanyList(generics.ListCreateAPIView):
         'type',
     ]
     filterset_fields = [
-        # all owner companies
         'owner__profile',
         'location',
     ]
@@ -50,7 +49,6 @@ class CompanyList(generics.ListCreateAPIView):
         If owner already has 3 companies in the list a ValidationError
         is raised.
         """
-        # Check the user's company count
         companies_count = Company.objects.filter(
             owner=self.request.user).count()
 
@@ -59,7 +57,6 @@ class CompanyList(generics.ListCreateAPIView):
                 "You have reached the max profile limit of 3 companies."
             )
 
-        # Check if a company with the same title and location exists
         existing_company = Company.objects.filter(
             name=company_title,
             location=company_location
@@ -93,3 +90,30 @@ class CompanyDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Company.objects.annotate(
         employee_count=Count('current_employee', distinct=True)
     ).order_by('created_on')
+
+    def validate_company_update(self, company_title, company_location):
+        """
+        Validates Company update.
+        If a company with the same title and location exists,
+        a ValidationError is raised.
+        """
+        existing_company = Company.objects.exclude(pk=self.get_object().pk).filter(
+            name=company_title,
+            location=company_location
+        ).first()
+
+        if existing_company:
+            raise serializers.ValidationError(
+                f"A company with the title '{company_title}'"
+                f" and location '{company_location}' already exists."
+            )
+
+    def perform_update(self, serializer):
+        """
+        Updates a company but first validates the company input.
+        """
+        company_title = serializer.validated_data.get('name')
+        company_location = serializer.validated_data.get('location')
+        self.validate_company_update(company_title, company_location)
+
+        serializer.save()
