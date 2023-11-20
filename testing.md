@@ -31,7 +31,9 @@ To test test the overall functionality of the craft_api project and its containi
 
 Initially when building the testcases I had to learn the difference bewteen TestCase and APITestCase, however after reading the necessary documents it was clear that APITestCase would be useful for testing api endpoints therefore it was used for testiing views, serializers and permissions. TestCase was useful for testing the models as this doesnt rewuire the same functionality in the tests.
 
-*Some resources I used to build knowledge and write tests: [Testing references](#testing-using-apitestcase-apiclient)*
+The written tests can be found in the `<App>/tests/` files of all apps in the API.
+
+*Some resources I used to build knowledge and write tests can be found in [README.md](README.md) credits section.*
 
 [⏫ contents](#contents)
 
@@ -70,6 +72,7 @@ To run `coverage` for each app, type in command line:
 ![Posts report](README_images/testing/posts_cov.png)
 ![Profiles report](README_images/testing/profiles_cov.png)
 </details>
+<br>
 
 [⏫ contents](#contents)
 
@@ -117,6 +120,7 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 ![Test 2](README_images/testing/manual/root/root-login.png)
 </details>
+<br>
 
 [⏫ contents](#contents)
 
@@ -137,6 +141,7 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 ![Test 4](README_images/testing/manual/profiles/profiles-login.png)
 </details>
+<br>
 
 [⏫ contents](#contents)
 
