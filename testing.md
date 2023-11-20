@@ -15,12 +15,16 @@
     - [/comments/<int:pk>](#commentsintpk-tests)
     - [/companies/](#companies-tests)
     - [/companies/<int:pk>](#companiesintpk-tests)
+
     - [/approvals/](#approvals-tests)
     - [/approvals/<int:pk>](#approvalsintpk-tests)
     - [/likes/](#likes-tests)
     - [/likes/<int:pk>](#likesintpk-tests)
     - [/followers/](#followers-tests)
     - [/followers/<int:pk>](#followersintpk-tests)
+    - [/dj-rest-auth/user]()
+    - [/dj-rest-auth/registration/]()
+    - [/dj-rest-auth/login/]()
 
 [⏪ Main README](README.md)
 
@@ -109,17 +113,10 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 | 1 | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
 | 2 | Navigate to the 'root' url as a logged in user | GET | Displays welcome message | 200 | Pass | - |
 
-<details>
-<summary>Test 1 Screenshots</summary>
-
-![Test 1](README_images/testing/manual/root/root.png)
-</details>
-<details>
-<summary>Test 2 Screenshots</summary>
-
-![Test 2](README_images/testing/manual/root/root-login.png)
-</details>
-<br>
+| Test Screenshots |
+|-------------|
+| <details><summary>Test 1</summary> ![Test 1](README_images/testing/manual/root/root.png) </details> |
+| <details><summary>Test 2</summary> ![Test 2](README_images/testing/manual/root/root-login.png) </details> |
 
 [⏫ contents](#contents)
 
@@ -130,17 +127,10 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 | 3 | Navigate to the the profiles page url as a logged out user | GET | Returns a lists of all site profiles. | 200 | Pass | - |
 | 4 | Navigate to the the profiles page url as a logged in user | GET | Returns a lists of all site profiles. | 200 | Pass | - |  |
 
-<details>
-<summary>Test 3 Screenshots</summary> 
-
-![Test 3](README_images/testing/manual/profiles/profiles.png)
-</details>
-<details>
-<summary>Test 4 Screenshots</summary>
-
-![Test 4](README_images/testing/manual/profiles/profiles-login.png)
-</details>
-<br>
+| Test Screenshots |
+|-------------|
+| <details><summary>Test 3</summary> ![Test 3](README_images/testing/manual/profiles/profiles.png) </details> |
+| <details><summary>Test 4</summary> ![Test 4](README_images/testing/manual/profiles/profiles-login.png) </details> |
 
 [⏫ contents](#contents)
 
@@ -314,11 +304,23 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| 70 | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 70 | Navigate to the 'approvals' url as a logged out user | GET | Displays list of approvals, including count and pagination fields. | 200 | Pass | - |
+| 71 | Navigate to the 'approvals' url as a logged in user | GET | Displays list of approvals, including create approval HTML form. | 200 | Pass | - |
+| 72 | Check an approvals 'created_on' field is in natural readable format. | GET | Created on field is set to a readable format for example, "1 month, 1 week ago" | N/A | Pass | - |
+| 73 | Create an approval by selecting logged in users name in the dropdown menu, click 'POST'. | POST | Validation error is raised with message: "Cannot approve your own profile". | 400 | Pass | - |
+| 74 | Create an approval by selected a profile username (not logged in user) in the dropdown menu, click 'POST'. | POST | Approval instance is created. | 201 | Pass | - |
+| 75 | Attempt to create an approval with invalid JSON data { "profile": "Test99" }, click 'POST'. | POST | Validation error is raised. | 400 | Pass | - |
+| 76 | Attempt to create an approval with duplicate JSON data { "profile": 2 }, click 'POST'. | POST | Validation error is raised. | 400 | Pass | - |
+| 77 | Attempt to create an approval with valid JSON data { "profile": <profile.id> }, click 'POST'. | POST | The approval is created. | 201 | Pass | - |
+| 78 | After creating an approval check the approved profiles 'approval_count' has incremented by 1. | POST | . | 201 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test 70</summary> ![Test 70](README_images/testing/manual/) </details> |  |
+| <details><summary>Test 70</summary> ![Test 70](README_images/testing/manual/approvals/approvals.png) </details> | <details><summary>Test 75</summary> ![Test 75](README_images/testing/manual/approvals/approvals-invalid-json.png) </details> |
+| <details><summary>Test 71</summary> ![Test 71](README_images/testing/manual/approvals/approvals-login.png) </details> | <details><summary>Test 76</summary> ![Test 76](README_images/testing/manual/approvals/json-duplicate.png) </details> |
+| <details><summary>Test 72</summary> ![Test 72](README_images/testing/manual/approvals/created-on.png) </details> | <details><summary>Test 77</summary> ![Test 77](README_images/testing/manual/approvals/create-json.png) </details> |
+| <details><summary>Test 73</summary> ![Test 73](README_images/testing/manual/approvals/approve-own-profile.png) </details> | <details><summary>Test 78</summary> ![Test 78](README_images/testing/manual/approvals/approval-count.png) </details> |
+| <details><summary>Test 74</summary> ![Test 74](README_images/testing/manual/approvals/created.png) </details> |  |
 
 [⏫ contents](#contents)
 
@@ -326,11 +328,15 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 79 | Navigate to an approval details owned by user, delete the approval instance. | DELETE | Approval instance is deleted. | 204 | Pass | - |
+| 80 | After deleting an approval check the previously approved profiles 'approval_count' has decremented by 1. | DELETE | The profiles 'approval_count field has decremented by 1. | 204 | Pass | - |
+| 81 | Navigate to an approval details, locate the 'owner' and 'profile' fields. | GET | The fields are reprsented by the profiles username and not the pk/ id. | N/A | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+| <details><summary>Test 79</summary> ![Test 79](README_images/testing/manual/approvals/delete-approval.png) </details> |  |
+| <details><summary>Test 80</summary> ![Test 80](README_images/testing/manual/approvals/approval-count-decrement.png) </details> |  |
+| <details><summary>Test 81</summary> ![Test 81](README_images/testing/manual/approvals/approval-details.png) </details> |  |
 
 [⏫ contents](#contents)
 
