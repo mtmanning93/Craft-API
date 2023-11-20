@@ -100,7 +100,9 @@ To check I ran the following in the command line:
 
 ## Manual Testing
 
-To accompany the automated testing, the Craft-API underwent manual testing on all custom endpoints, covering all CRUD functionality, serialised data, and checking `to_representation` methods. Below are the tests carried out at each API endpoint, they have been seperated by custom endpoint and details the HTTP method used for the test, and expected outcomes. If the test failed the action which was taken to ensure a Pass was made. All tests include screenshots, to view the screenshot select the test number in the screenshots table below the main tests table for each endpoint.
+To accompany the automated testing, the Craft-API underwent manual testing on all custom endpoints, covering all CRUD functionality, serialised data, and checking `to_representation` methods. Below are the tests carried out at each API endpoint, they have been seperated by custom endpoint and details the HTTP method used for the test, and expected outcomes. If the test failed the action which was taken to ensure a Pass was made.
+
+All tests include screenshots, in order for larger viewing they are seperate to the tests. To view the screenshot select the test number in the screenshots table below the main tests table for each endpoint.
 
 ## `/` Tests
 
