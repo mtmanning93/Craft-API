@@ -1,9 +1,12 @@
 # Manual Testing
 
-- [/](#endpoint-tests)
+- [/](#tests)
 - [/profiles/](#profiles-tests)
-- [/profiles/<int:pk>/](#profiles-tests)
+- [/profiles/<int:pk>](#profilesintpk-tests)
 - [/posts/](#posts-tests)
+- [/posts/<int:pk>](#postsintpk-tests)
+- [/comments/](#comments-tests)
+- [/comments/<int:pk>](#commentsintpk-tests)
 
 ## `/` Tests
 
@@ -93,24 +96,43 @@
 | --- | --- | --- | --- | --- | --- | --- |
 | 26 | Navigate to a post details page url as a logged out user | GET | Returns a lists of all related post details. | 200 | Pass | - |
 | 27 | Navigate to the the post page url of a post owned by user | GET | Returns a lists of all post details, including Delete button and html form beneath. | 200 | Pass | - |  |
-| 28 | Navigate to a post owned by the user, update the title field to a title longer than 100 characters, click 'PUT'. | PUT | Validation error is raised with message: "Ensure this field has no more than 100 characters." | 400 | Pass | - |
-| 29 | Navigate to a post owned by the user, update the content field, click 'PUT'. | PUT | Content field updates in the JSON response | 200 | Pass | - |
-| 30 | Update the post image file selector, with a file thats not an image. | PUT | Validation error is raised with message: "Upload a valid image. The file you uploaded was either not an image or a corrupted image." | 400 | Pass | - |
-| 31 | Update the post image file selector, with an image thats larger than 2mb. | PUT |  Validation error is raised with message: "Image size larger than 2MB!" | 400 | Pass | - |
-| 32 | Update the post image file selector, with an image thats wider than 4096px. | PUT | Validation error is raised with message: "Image width larger than 4096px!" | 400 | Pass | - |
-| 33 | Update the post image file selector, with an image thats higher than 4096px. | PUT | Validation error is raised with message: "Image height larger than 4096px!" | 400 | Pass | - |
-| 34 | Navigate to a post owned by the user, click the delete button. | DELETE | Delete confirmation displays, on confirmation deletes post, post is no longer available in the post list view. | 204 | Pass | - |
+| 28 | Navigate to the the post page url of a post owned by user | GET | Returns a lists of all post details, including the is_owner field which is set to 'true'. | 200 | Pass | - |
+| 29 | Navigate to a post owned by the user, update the title field to a title longer than 100 characters, click 'PUT'. | PUT | Validation error is raised with message: "Ensure this field has no more than 100 characters." | 400 | Pass | - |
+| 30 | Navigate to a post owned by the user, update the content field, click 'PUT'. | PUT | Content field updates in the JSON response | 200 | Pass | - |
+| 31 | Update the post image file selector, with a file thats not an image. | PUT | Validation error is raised with message: "Upload a valid image. The file you uploaded was either not an image or a corrupted image." | 400 | Pass | - |
+| 32 | Update the post image file selector, with an image thats larger than 2mb. | PUT |  Validation error is raised with message: "Image size larger than 2MB!" | 400 | Pass | - |
+| 33 | Update the post image file selector, with an image thats wider than 4096px. | PUT | Validation error is raised with message: "Image width larger than 4096px!" | 400 | Pass | - |
+| 34 | Update the post image file selector, with an image thats higher than 4096px. | PUT | Validation error is raised with message: "Image height larger than 4096px!" | 400 | Pass | - |
+| 35 | Navigate to a post owned by the user, click the delete button. | DELETE | Delete confirmation displays, on confirmation deletes post, post is no longer available in the post list view. | 204 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test 26</summary> ![Test 26](README_images/testing/manual/posts/post-details.png) </details> | <details><summary>Test 31</summary> ![Test 31](README_images/testing/manual/posts/update-too-large.png) </details> |
-| <details><summary>Test 27</summary> ![Test 27](README_images/testing/manual/posts/owner-post-details.png) </details> | <details><summary>Test 32</summary> ![Test 32](README_images/testing/manual/posts/update-too-wide.png) </details> |
-| <details><summary>Test 28</summary> ![Test 28](README_images/testing/manual/posts/update-title-invalid.png) </details> | <details><summary>Test 33</summary> ![Test 33](README_images/testing/manual/posts/update-too-high.png) </details> |
-| <details><summary>Test 29</summary> ![Test 29](README_images/testing/manual/posts/content-updates.png) </details> | <details><summary>Test 34</summary> ![Test 34 Notification](README_images/testing/manual/posts/delete-notification.png) ![Test 34](README_images/testing/manual/posts/delete-post.png) </details> |
-| <details><summary>Test 30</summary> ![Test 30](README_images/testing/manual/posts/update-invalid.png) </details> |  |
+| <details><summary>Test 26</summary> ![Test 26](README_images/testing/manual/posts/post-details.png) </details> | <details><summary>Test 31</summary> ![Test 31](README_images/testing/manual/posts/update-invalid.png) </details> |
+| <details><summary>Test 27</summary> ![Test 27](README_images/testing/manual/posts/owner-post-details.png) </details> | <details><summary>Test 32</summary> ![Test 32](README_images/testing/manual/posts/update-too-large.png) </details> |
+| <details><summary>Test 28</summary> ![Test 28](README_images/testing/manual/posts/is-owner.png) </details> | <details><summary>Test 33</summary> ![Test 33](README_images/testing/manual/posts/update-too-wide.png) </details> |
+| <details><summary>Test 29</summary> ![Test 29](README_images/testing/manual/posts/update-title-invalid.png) </details> | <details><summary>Test 34</summary> ![Test 34](README_images/testing/manual/posts/update-too-high.png) </details> |
+| <details><summary>Test 30</summary> ![Test 30](README_images/testing/manual/posts/content-updates.png) </details> | <details><summary>Test 35</summary> ![Test 35 Notification](README_images/testing/manual/posts/delete-notification.png) ![Test 35](README_images/testing/manual/posts/delete-post.png) </details> |
 
-----------------------------
+## `/comments/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+| 36 | Navigate to the the profiles page url as a logged out user | GET | Returns a lists of all site profiles. | 200 | Pass | - |
+| 37 | Navigate to the the profiles page url as a logged in user | GET | Returns a lists of all site profiles. | 200 | Pass | - |  |
 
 | Test Screenshots |              |
 |-------------|--------------|
-|  |  |
+| ![Test #](README_images/testing/manual/comments/) |  |
+| ![Test #](README_images/testing/manual/comments/) |  |
+
+## `/comments/<int:pk>/` Tests
+
+| **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
+| --- | --- | --- | --- | --- | --- | --- |
+|  |  |  |  | 200 | Pass | - |
+|  |  |  |  | 200 | Pass | - |
+
+| Test Screenshots |              |
+|-------------|--------------|
+| ![Test #](README_images/testing/manual/comments/) |  |
+| ![Test #](README_images/testing/manual/comments/) |  |
