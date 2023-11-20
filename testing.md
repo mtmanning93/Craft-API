@@ -4,7 +4,6 @@
 
 - [Automated Testing](#automated-testing)
 - [Coverage](#coverage)
-- [Manual Testing](#manual-testing)
 - [Python Linter](#python-linter)
 - [Manual Testing](#manual-testing)
     - [/](#tests)
