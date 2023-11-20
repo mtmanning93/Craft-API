@@ -1,4 +1,4 @@
-from rest_framework import generics, permissions, filters
+from rest_framework import generics, permissions, filters, serializers
 from django_filters.rest_framework import DjangoFilterBackend
 from craft_api.permissions import IsOwnerOrReadOnly
 from .models import Follower
@@ -31,8 +31,10 @@ class FollowerList(generics.ListCreateAPIView):
     ]
 
     def perform_create(self, serializer):
+        if self.request.user == serializer.validated_data.get('followed'):
+            raise serializers.ValidationError("You cannot follow your own profile.")
+        
         serializer.save(owner=self.request.user)
-
 
 class FollowerDetail(generics.RetrieveDestroyAPIView):
     """

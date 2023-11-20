@@ -347,20 +347,17 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 | 82 | Navigate to the 'likes' url as a logged out user | GET | Displays list of likes, including count and pagination fields. | 200 | Pass | - |
 | 83 | Navigate to the 'likes' url as a logged in user | GET | Displays list of likes, including create like HTML form. | 200 | Pass | - |
 | 84 | Create a like by selecting a post title in the dropdown menu, click 'POST'. | POST | Like instance is created | 201 | Pass | - |
-| 85 | Create an approval by selected a post you have already liked from the dropdown menu, click 'POST'. | POST | Validation error is raised: "Possible Duplicate". | 400 | Pass | - |
+| 85 | Create a like by selected a post you have already liked from the dropdown menu, click 'POST'. | POST | Validation error is raised: "Possible Duplicate". | 400 | Pass | - |
 | 86 | Attempt to create a like with invalid JSON data { "post": "Invalid" }, click 'POST'. | POST | Validation error is raised. | 400 | Pass | - |
-| 87 | Attempt to create an approval with valid JSON data { "profile": <profile.id> }, click 'POST'. | POST | The like is created. | 201 | Pass | - |
+| 87 | Attempt to create a like with valid JSON data { "post": <post.id> }, click 'POST'. | POST | The like is created. | 201 | Pass | - |
 | 88 | After creating a like check the liked posts 'like_count' has incremented by 1. | POST | likes_count of the related post has increased by 1. | 201 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test 82</summary> ![Test 82](README_images/testing/manual/likes/like-list.png) </details> |  |
-| <details><summary>Test 83</summary> ![Test 83](README_images/testing/manual/likes/like-list-form.png) </details> |  |
-| <details><summary>Test 84</summary> ![Test 84](README_images/testing/manual/likes/create-like.png) </details> |  |
+| <details><summary>Test 82</summary> ![Test 82](README_images/testing/manual/likes/like-list.png) </details> | <details><summary>Test 86</summary> ![Test 86](README_images/testing/manual/likes/invalid-json.png) </details> |
+| <details><summary>Test 83</summary> ![Test 83](README_images/testing/manual/likes/like-list-form.png) </details> | <details><summary>Test 87</summary> ![Test 87](README_images/testing/manual/likes/create-json.png) </details> |
+| <details><summary>Test 84</summary> ![Test 84](README_images/testing/manual/likes/create-like.png) </details> | <details><summary>Test 88</summary> ![Test 88](README_images/testing/manual/likes/likes-count.png) </details> |
 | <details><summary>Test 85</summary> ![Test 85](README_images/testing/manual/likes/duplicate.png) </details> |  |
-| <details><summary>Test 86</summary> ![Test 86](README_images/testing/manual/likes/invalid-json.png) </details> |  |
-| <details><summary>Test 87</summary> ![Test 87](README_images/testing/manual/likes/create-json.png) </details> |  |
-| <details><summary>Test 88</summary> ![Test 88](README_images/testing/manual/likes/likes-count.png) </details> |  |
 
 [⏫ contents](#contents)
 
@@ -371,10 +368,10 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 | 89 | Navigate to a like details url owned by the user, delete the instance | DELETE | Like instance is deleted | 204 | Pass | - |
 | 90 | After deleting a like check the previously liked posts 'like_count' has decreased by 1. | DELETE | likes_count of the related post has decreased by 1. | 204 | Pass | - |
 
-| Test Screenshots |              |
-|-------------|--------------|
-| <details><summary>Test 89</summary> ![Test 89](README_images/testing/manual/likes/likes-delete.png) </details> |  |
-| <details><summary>Test 90</summary> ![Test 90](README_images/testing/manual/likes/likes-count-decrement.png) </details> |  |
+| Test Screenshots |
+|-------------|
+| <details><summary>Test 89</summary> ![Test 89](README_images/testing/manual/likes/likes-delete.png) </details> |
+| <details><summary>Test 90</summary> ![Test 90](README_images/testing/manual/likes/likes-count-decrement.png) </details> |
 
 [⏫ contents](#contents)
 
@@ -382,11 +379,21 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 91 | Navigate to the '/followers/' url as a logged out user | GET | Displays list of all follower instances, including count and pagination fields. | 200 | Pass | - |
+| 92 | Navigate to the '/followers/' url as a logged in user | GET | Displays list of likes, including create follower HTML form. | 200 | Pass | - |
+| 93 | Create a follower instance by selecting a profile username from the dropdown menu, click 'POST'. | POST | Follower instance is created | 201 | Pass | - |
+| 94 | Create a follower by selecting the logged in users username, click 'POST'. | POST | Validation error is raised: "Possible Duplicate". | 400 | Fail - Follower instance created, users should not be able to follow themselves. | Pass - create a 'perform_create' validation method which checks and raises a validation error if the request.user is equal to the 'followed' fields data (`followers/views.py`) |
+| 95 | Create a follower instance using the a profile already 'followed', click 'POST'. | POST | Validation error is raised: "Possible duplicate." | 400 | Pass | - |
+| 96 | Attempt to create an approval with valid JSON data { "followed": <profile.id> }, click 'POST'. | POST | The like is created. | 201 | Pass | - |
+| 97 | After creating a follower check the followed profiles 'follower_count' has incremented by 1. | POST | follower_count of the related profile has increased by 1. | 201 | Pass | - |
+| 98 | After creating a follower check the users profile 'following_count' has incremented by 1. | POST | following_count of the users profile has increased by 1. | 201 | Pass | - |
 
 | Test Screenshots |              |
 |-------------|--------------|
-| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+| <details><summary>Test 91</summary> ![Test 91](README_images/testing/manual/followers/follower-list.png) </details> | <details><summary>Test 95</summary> ![Test 95](README_images/testing/manual/followers/duplicate.png) </details> |
+| <details><summary>Test 92</summary> ![Test 92](README_images/testing/manual/followers/follower-list-form.png) </details> | <details><summary>Test 96</summary> ![Test 96](README_images/testing/manual/followers/create-json.png) </details> |
+| <details><summary>Test 93</summary> ![Test 93](README_images/testing/manual/followers/created.png) </details> | <details><summary>Test 97</summary> ![Test 97 Before Follow](README_images/testing/manual/followers/followers-following-count-zero.png) ![Test 97 After Follow](README_images/testing/manual/followers/follower-count-increase.png) </details> |
+| <details><summary>Test 94</summary> ![Test 94 Before](README_images/testing/manual/followers/follow-own-profile-before.png) ![Test 94 After](README_images/testing/manual/followers/follow-own-profile-after.png) </details> | <details><summary>Test 98</summary> ![Test 98 Before Follow](README_images/testing/manual/followers/following-count-before.png) ![Test 98 After Follow](README_images/testing/manual/followers/following-count-after.png) </details> |
 
 [⏫ contents](#contents)
 
@@ -394,11 +401,15 @@ To accompany the automated testing, the Craft-API underwent manual testing on al
 
 | **#** | **Test** | **Test HTTP Method** | **Expected Outcome** | **Expected Status Code** | **Result** | **Action Taken To Pass _(if fail)_** |
 | --- | --- | --- | --- | --- | --- | --- |
-| # | Navigate to the 'root' url as a logged out user | GET | Displays welcome message | 200 | Pass | - |
+| 99 | Navigate to a follower details url or a follower instance owned by the user, delete follower instance. | DELETE | Follower instance is destroyed. | 204 | Pass | - |
+| 100 | After deleting a follower instance, check the users profile 'following_count' has decreased by 1. | DELETE | following_count of the users profile has decreased by 1. | 204 | Pass | - |
+| 101 | After deleting a follower instance check the previously followed profiles 'follower_count' has decreased by 1. | DELETE | follower_count of the related profile has decreased by 1. | 204 | Pass | - |
 
-| Test Screenshots |              |
-|-------------|--------------|
-| <details><summary>Test #</summary> ![Test #](README_images/testing/manual/) </details> |  |
+| Test Screenshots |
+|-------------|
+| <details><summary>Test 99</summary> ![Test 99](README_images/testing/manual/followers/delete.png) </details> |
+| <details><summary>Test 100</summary> ![Test 100 Before Delete](README_images/testing/manual/followers/following-count-after.png) ![Test 100 After Delete](README_images/testing/manual/followers/following-count-before.png) </details> |
+| <details><summary>Test 101</summary> ![Test 101 Before Delete](README_images/testing/manual/followers/follower-count-increase.png) ![Test 101 After Delete](README_images/testing/manual/followers/followers-following-count-zero.png) </details> |
 
 [⏫ contents](#contents)
 
