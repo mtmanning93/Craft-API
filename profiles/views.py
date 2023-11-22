@@ -1,9 +1,16 @@
 from django.db.models import Count
+from rest_framework import status
 from rest_framework import generics, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from .models import Profile
 from .serializers import ProfileSerializer
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from craft_api.permissions import IsOwnerOrReadOnly
+from rest_framework.views import APIView
+from django.http import Http404
+from craft_api.views import logout_route
+from django.contrib.auth.models import User
 
 
 class ProfileList(generics.ListAPIView):
@@ -59,3 +66,22 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         following_count=Count('owner__following', distinct=True),
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
+
+# WORKS BUT MUST TEST
+class DeleteAccount(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        user = self.request.user
+
+        # Check if the user has a profile
+        try:
+            profile = Profile.objects.get(owner=user)
+        except Profile.DoesNotExist:
+            raise Http404("Profile not found for the user.")
+
+        # Delete the user and associated profile
+        user.delete()
+        profile.delete()
+
+        return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
