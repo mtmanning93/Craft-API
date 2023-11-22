@@ -53,7 +53,7 @@ class ProfileList(generics.ListAPIView):
     ]
 
 
-class ProfileDetail(generics.RetrieveUpdateAPIView):
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Allows the retrieval of a profile and the ability to
     edit it if the user is the owner.
@@ -67,21 +67,35 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
 
-# WORKS BUT MUST TEST
-class DeleteAccount(APIView):
-    permission_classes = [IsAuthenticated]
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
 
-    def delete(self, request, *args, **kwargs):
-        user = self.request.user
+        # Check if the user making the request is the owner of the profile
+        if request.user != instance.owner:
+            return Response({"error": "You do not have permission to delete this profile."}, status=status.HTTP_403_FORBIDDEN)
 
-        # Check if the user has a profile
-        try:
-            profile = Profile.objects.get(owner=user)
-        except Profile.DoesNotExist:
-            raise Http404("Profile not found for the user.")
+        # Delete the profile and associated user
+        instance.owner.delete()
+        instance.delete()
 
-        # Delete the user and associated profile
-        user.delete()
-        profile.delete()
-
+        # You can customize the response as needed
         return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
+
+# WORKS BUT MUST TEST
+# class DeleteAccount(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def delete(self, request, *args, **kwargs):
+#         user = self.request.user
+
+#         # Check if the user has a profile
+#         try:
+#             profile = Profile.objects.get(owner=user)
+#         except Profile.DoesNotExist:
+#             raise Http404("Profile not found for the user.")
+
+#         # Delete the user and associated profile
+#         user.delete()
+#         profile.delete()
+
+#         return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
