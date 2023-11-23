@@ -13,7 +13,8 @@ def root_route(request):
     return Response(
         {
             "message": (
-                "Welcome to the craft-api, " "built for the Craft social media app."
+                "Welcome to the craft-api,"
+                " built for the Craft social media app."
             )
         }
     )
