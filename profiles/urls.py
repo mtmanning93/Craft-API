@@ -7,5 +7,4 @@ urlpatterns = [
         "profiles/<int:pk>/",
         views.ProfileDetail.as_view(),
         name="profile-detail"),
-    path("profiles/delete/<int:pk>/", views.DeleteAccount.as_view()),
 ]
