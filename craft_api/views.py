@@ -46,10 +46,18 @@ def delete_account(request, pk):
         )
         return response
 
+    except Http404 as e:
+        print(f"Http404 error: {str(e)}")
+        raise  # Re-raise the Http404 exception
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        raise 
     except User.DoesNotExist:
         raise Http404("User not found.")
     except Profile.DoesNotExist:
         raise Http404("Profile not found.")
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view()
 def root_route(request):
