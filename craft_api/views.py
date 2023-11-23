@@ -9,8 +9,8 @@ from .settings import (
 from profiles.models import Profile
 from django.contrib.auth.models import User
 
-@api_view(["POST"])
-def logout_and_delete(request, pk):
+@api_view(["DELETE"])
+def delete_account(request, pk):
     # Check if the user making the request is the same as the one to be deleted
     if request.user.id != int(pk):
         return Response({"error": "You do not have permission to delete this user."}, status=status.HTTP_403_FORBIDDEN)
