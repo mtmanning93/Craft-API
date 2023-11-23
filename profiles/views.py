@@ -67,11 +67,15 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
 
-# WORKS BUT MUST TEST
+# # WORKS BUT MUST TEST
 class DeleteAccount(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsOwnerOrReadOnly]
 
-    def delete(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            # Return an appropriate response for an unauthenticated user
+            return Response({"error": "User not authenticated."}, status=status.HTTP_401_UNAUTHORIZED)
+
         user = self.request.user
 
         # Check if the user has a profile
@@ -80,7 +84,23 @@ class DeleteAccount(APIView):
         except Profile.DoesNotExist:
             raise Http404("Profile not found for the user.")
 
-        # Delete the user and associated profile
+        serializer = ProfileSerializer(profile, context={'request': request})
+        return Response(serializer.data)
+
+    def delete(self, request, *args, **kwargs):
+        user = self.request.user
+
+        if not user.is_authenticated:
+            return Response({"error": "User not authenticated, delete not possible."}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Check if the user has a profile
+        try:
+            profile = Profile.objects.get(owner=user)
+        except Profile.DoesNotExist:
+            raise Http404("Profile not found for the user.")
+
+
+        logout_route(request._request)
         user.delete()
         profile.delete()
 
