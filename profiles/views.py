@@ -67,21 +67,22 @@ class ProfileDetail(generics.RetrieveUpdateAPIView):
         approval_count=Count('approval__owner', distinct=True),
     ).order_by('-created_on')
 
-# # WORKS BUT MUST TEST
-# class DeleteAccount(APIView):
-#     permission_classes = [IsAuthenticated]
+# WORKS BUT MUST TEST // Doesnt work with logout route
+class DeleteAccount(APIView):
+    permission_classes = [IsAuthenticated]
 
-#     def delete(self, request, *args, **kwargs):
-#         user = self.request.user
+    def delete(self, request, *args, **kwargs):
+        user = self.request.user
 
-#         # Check if the user has a profile
-#         try:
-#             profile = Profile.objects.get(owner=user)
-#         except Profile.DoesNotExist:
-#             raise Http404("Profile not found for the user.")
+        # Check if the user has a profile
+        try:
+            profile = Profile.objects.get(owner=user)
+        except Profile.DoesNotExist:
+            raise Http404("Profile not found for the user.")
 
-#         # Delete the user and associated profile
-#         user.delete()
-#         profile.delete()
+        # Delete the user and associated profile
+        user.delete()
+        profile.delete()
+        logout_route(request._request)
 
-#         return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
+        return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
