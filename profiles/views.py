@@ -99,8 +99,6 @@ class DeleteAccount(APIView):
         except Profile.DoesNotExist:
             raise Http404("Profile not found for the user.")
 
-
-        logout_route(request._request)
         user.delete()
         profile.delete()
 
