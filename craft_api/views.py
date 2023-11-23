@@ -5,36 +5,40 @@ from .settings import (
     JWT_AUTH_REFRESH_COOKIE,
     JWT_AUTH_SAMESITE,
     JWT_AUTH_SECURE,
-    )
+)
 
 
 @api_view()
 def root_route(request):
-    return Response({
-        "message": (
-            "Welcome to the craft-api, "
-            "built for the Craft social media app."
-        )
-    })
+    return Response(
+        {
+            "message": (
+                "Welcome to the craft-api, " "built for the Craft social media app."
+            )
+        }
+    )
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def logout_route(request):
+    # Fix for DRF logout bug from Code Institutes
+    # DRF walkthrough
+    print("Performing logout")
     response = Response()
     response.set_cookie(
         key=JWT_AUTH_COOKIE,
-        value='',
+        value="",
         httponly=True,
-        expires='Thu, 01 Jan 1970 00:00:00 GMT',
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
         max_age=0,
         samesite=JWT_AUTH_SAMESITE,
         secure=JWT_AUTH_SECURE,
     )
     response.set_cookie(
         key=JWT_AUTH_REFRESH_COOKIE,
-        value='',
+        value="",
         httponly=True,
-        expires='Thu, 01 Jan 1970 00:00:00 GMT',
+        expires="Thu, 01 Jan 1970 00:00:00 GMT",
         max_age=0,
         samesite=JWT_AUTH_SAMESITE,
         secure=JWT_AUTH_SECURE,

@@ -99,7 +99,12 @@ class DeleteAccount(APIView):
         except Profile.DoesNotExist:
             raise Http404("Profile not found for the user.")
 
+
+        logout(request)
         user.delete()
         profile.delete()
+
+        response.delete_cookie(key=JWT_AUTH_COOKIE)
+        response.delete_cookie(key=JWT_AUTH_REFRESH_COOKIE)
 
         return Response({"result": "User and profile deleted."}, status=status.HTTP_200_OK)
