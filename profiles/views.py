@@ -51,6 +51,7 @@ class ProfileList(generics.ListAPIView):
         'owner__following__followed__profile',
         'owner__followed__owner__profile',
         'employer__current_employee',
+        'employer',
     ]
 
 
