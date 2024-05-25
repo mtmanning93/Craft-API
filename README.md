@@ -36,7 +36,7 @@ Python, Django Rest Framework, Cloudinary, JSON Web Tokens, ElephantSQL with Pos
 
 To get started follow these steps to clone the github repository locally, and setup other dependencies: 
 
-[Deployement. *(Github cloning, Cloudinary and ElephantSQL setup, Heroku Deployment)*](#deployment)
+[Deployment. *(Github cloning, Cloudinary and ElephantSQL setup, Heroku Deployment)*](#deployment)
 
 ## Contents
 
@@ -704,7 +704,9 @@ Cloudinary was used to store all media files added by users and pre uploaded def
 
 ### ElephantSQL Deployment
 
-The api uses ElephantSQL as the database hosting service with PostgreSQL. Click the link to navigate to the [ElephantSQL site](https://customer.elephantsql.com/). In order to set up ElephantSQL follow these steps:
+Originally the api used ElephantSQL as the database hosting service with PostgreSQL. However ElephantSQL announced and end of service beginning in early 2025, therefore the databases were migrated to Neon. To see how to deploy to Neon [click here](#neon-deployment).
+
+Click the link to navigate to the [ElephantSQL site](https://customer.elephantsql.com/). In order to set up ElephantSQL follow these steps:
 
 **1. Create an account or log in to your ElephantSQL dashboard and click the green 'Create New Instance' Button.**
 
@@ -731,6 +733,26 @@ Generally, the title here is the project title. For the api, the 'Tiny Turtle (F
 **6. This will display all the necessary credentials to connect this project to your database.**
 
 ![Instance details](README_images/deployment/elephant_details.png)
+
+[⏫ contents](#contents)
+
+### Neon Deployment
+-------------------
+Due to ElephantSQL end of life, the project database was migrated over to [Neon](https://console.neon.tech/realms/prod-realm/protocol/openid-connect/auth?client_id=neon-console&redirect_uri=https%3A%2F%2Fconsole.neon.tech%2Fauth%2Fkeycloak%2Fcallback&response_type=code&scope=openid+profile+email&state=0tRwwIsTryvbbFvrKBn7vA%3D%3D%2C%2C%2C).
+
+I order to use Neon to host your PostgreSQL databases follow these steps:
+
+**1. Navigate to the Neon website and signup.**
+
+![Neon signup](README_images/deployment/neon_login.png)
+
+**2. Once signed up create a project by providing a project name, database name, and selecting the region closest to you. Click create project.**
+
+![Create Project](README_images/deployment/neon_create.png)
+
+**3. Next in the dashboard, locate the 'connection string'. This string will be used as the DATABASE_URL during deployment**
+
+![Connection String](README_images/deployment/neon_dashboard.png)
 
 [⏫ contents](#contents)
 
